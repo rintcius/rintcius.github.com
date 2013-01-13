@@ -1,5 +1,5 @@
 Title: New blog
-Date: 2013-01-13 10:20
+Date: 2013-01-13
 Tags: misc
 Category: post
 Slug: post/new-blog
