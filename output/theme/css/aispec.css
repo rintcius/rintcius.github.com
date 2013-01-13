@@ -1,0 +1,12 @@
+@font-face {
+    font-family: 'Airbus';
+    src: url('../font/aispec.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.airbus-italic-bold {
+    font-family: 'Airbus';
+    font-style: italic;
+    font-weight: bold;
+}
