@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Blok blogs</title><link href="http://blog.rintcius.nl/" rel="alternate"></link><link href="http://blog.rintcius.nl/feeds/post.atom.xml" rel="self"></link><id>http://blog.rintcius.nl/</id><updated>2013-01-13T00:00:00+01:00</updated><entry><title>New blog</title><link href="http://blog.rintcius.nl/post/new-blog.html" rel="alternate"></link><updated>2013-01-13T00:00:00+01:00</updated><author><name>Rintcius Blok</name></author><id>tag:blog.rintcius.nl,2013-01-13:post/new-blog.html</id><summary type="html">&lt;p&gt;This is the place of my new blog, moving away from Wordpress, and moving to &lt;a href="http://docs.getpelican.com/"&gt;Pelican&lt;/a&gt;.
-Pelican is a static site generator written in Python which enables serving a site directly from Github.&lt;/p&gt;
-&lt;p&gt;Pelican makes writing a post as easy as pushing a file to Github.
-So writing has become more like programming, which increases the chances of me blogging more often ;)&lt;/p&gt;</summary><category term="misc"></category></entry></feed>
