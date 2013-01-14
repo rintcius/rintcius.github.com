@@ -75,6 +75,6 @@ github-proj: publish
 
 github-site: publish
 	ghp-import $(OUTPUTDIR)
-	git push origin gh-pages:master
+	git push git@github.com:rintcius/rintcius.github.com.git gh-pages:master
 
 .PHONY: html help clean regenerate serve devserver publish ssh_upload rsync_upload dropbox_upload ftp_upload github
