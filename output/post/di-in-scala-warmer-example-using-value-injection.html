@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Blok blogs - misc</title>
+    <title>DI in Scala: Warmer example using Value injection</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="Rintcius Blok">
@@ -64,7 +64,7 @@
           <div class="nav-collapse">
             <ul class="nav">
                                                                     <li class="divider-vertical"></li>
-                                              <li >
+                                              <li class="active">
                     <a href="../category/post.html">
 						<i class="icon-folder-open icon-large"></i>post
 					</a>
@@ -84,12 +84,29 @@
     <div class="container-fluid">
       <div class="row">
         <div class="span9" id="content">
-                            <div class="article">
-                <h1><a href="../post/new-blog.html">New blog</a></h1>
-                <div class="well small"><footer class="post-info">
+            <section id="content">
+        <article>
+                <header>
+                    <div class="page-header">
+                        <h1>
+                                <a href=""
+                                        rel="bookmark"
+                                        title="Permalink to DI in Scala: Warmer example using Value injection">
+                                        DI in Scala: Warmer example using Value injection
+                                </a>
+                                <a href="http://twitter.com/share" class="twitter-share-button"
+   data-count="horizontal" data-via="rintcius">Tweet</a>
+<script type="text/javascript" src="http://platform.twitter.com/widgets.js">
+</script>
+                        </h1>
+                    </div>
+                </header>
+                <div class="entry-content">
+                <div class="well">
+                        <footer class="post-info">
 <span class="label">Date</span>
-<abbr class="published" title="2013-01-13T00:00:00">
-        <i class="icon-calendar"></i>Sun 13 January 2013
+<abbr class="published" title="2013-01-15T00:00:00">
+        <i class="icon-calendar"></i>Tue 15 January 2013
 </abbr>
 <span class="label">By</span>
 <i class="icon-user"></i><a href="../author/rintcius-blok.html">Rintcius Blok</a>
@@ -98,18 +115,31 @@
 
 
 <span class="label">Tags</span>
-    <i class="icon-tag"></i><a href="../tag/misc.html">misc</a>
-</footer><!-- /.post-info --></div>
-                <div class="summary"><p>This is the place of my new blog, moving away from Wordpress, and moving to <a href="http://docs.getpelican.com/">Pelican</a>.
-Pelican is a static site generator written in Python which enables serving a site directly from Github.</p>
-<p>Pelican makes writing a post as easy as pushing a file to Github.
-So writing has become ...</p>
-                        <a class="btn btn-primary xsmall" href="../post/new-blog.html">more ...</a>
+    <i class="icon-tag"></i><a href="../tag/scala.html">scala</a>
+    <i class="icon-tag"></i><a href="../tag/software-design.html">software design</a>
+    <i class="icon-tag"></i><a href="../tag/dependency-injection.html">dependency injection</a>
+</footer><!-- /.post-info -->                </div>
+                <p>Here is the Warmer example as introduced <a href="http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/">here</a>
+using <a href="../post/di-on-steroids-with-scala-value-injection-on-traits.html">value injection on traits</a>:</p>
+<script src="https://gist.github.com/4538061.js"></script>
+                </div><!-- /.entry-content -->
+                                <div class="comments">
+                <h2>Comments</h2>
+                        <div id="disqus_thread"></div>
+                        <script type="text/javascript">
+                           var disqus_identifier = "post/di-in-scala-warmer-example-using-value-injection.html";
+                           (function() {
+                                var dsq = document.createElement('script');
+                                dsq.type = 'text/javascript'; dsq.async = true;
+                                dsq.src = 'http://rintcius.disqus.com/embed.js';
+                                (document.getElementsByTagName('head')[0] ||
+                                 document.getElementsByTagName('body')[0]).appendChild(dsq);
+                          })();
+                        </script>
                 </div>
-        </div>
-        <hr />
-        
-                        </div><!--/span-->
+                        </article>
+</section>
+        </div><!--/span-->
 
                 <div class="span3 well sidebar-nav" id="sidebar">
             <ul class="nav nav-list">

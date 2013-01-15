@@ -70,11 +70,9 @@ ftp_upload: publish
 	lftp ftp://$(FTP_USER)@$(FTP_HOST) -e "mirror -R $(OUTPUTDIR) $(FTP_TARGET_DIR) ; quit"
 
 github-proj: publish
-	ghp-import $(OUTPUTDIR)
-	git push origin gh-pages
+	ghp-import -p $(OUTPUTDIR)
 
 github-site: publish
-	ghp-import $(OUTPUTDIR)
-	git push git@github.com:rintcius/rintcius.github.com.git gh-pages:master
+	ghp-import -b master -p $(OUTPUTDIR)
 
 .PHONY: html help clean regenerate serve devserver publish ssh_upload rsync_upload dropbox_upload ftp_upload github

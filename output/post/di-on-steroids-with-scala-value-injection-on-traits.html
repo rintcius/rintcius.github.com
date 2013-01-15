@@ -149,7 +149,8 @@ And I will end with the conclusions.</p>
 <p>The name of the pattern "Value injection on traits" is analogous to the terminology that Martin Fowler introduced.
 I have added <em>on traits</em> to <em>value injection</em> to make the contrast with classes explicit.
 You <em>can</em> do value injection on classes, but that looks a lot like the constructor injection pattern that we already know.</p>
-<p>This is how the "Value injection on traits" pattern looks like, using the movie example of Fowler:</p>
+<p>This is how the "Value injection on traits" pattern looks like, using the movie example of Fowler
+(or if you prefer the <a href="../post/di-in-scala-warmer-example-using-value-injection.html">Warmer example that Jonas Boner introduced</a>):</p>
 <div class="codehilite"><pre>  trait MovieFinder {
     def findAll:Seq[Movie]
   }
@@ -293,7 +294,7 @@ And finally I like how the <strong>structure of the wiring</strong> is immediate
 Suggestions, ideas and thoughts are welcome!</p>
                 </div><!-- /.entry-content -->
                                 <div class="comments">
-                <h2>Comments !</h2>
+                <h2>Comments</h2>
                         <div id="disqus_thread"></div>
                         <script type="text/javascript">
                            var disqus_identifier = "post/di-on-steroids-with-scala-value-injection-on-traits.html";
@@ -326,14 +327,9 @@ Suggestions, ideas and thoughts are welcome!</p>
 </li>
 
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
-<li class="tag-4">
+<li class="tag-1">
     <a href="../tag/software-design.html">
         <i class="icon-tag icon-large"></i>software design
-    </a>
-</li>
-<li class="tag-4">
-    <a href="../tag/scala.html">
-        <i class="icon-tag icon-large"></i>scala
     </a>
 </li>
 <li class="tag-4">
@@ -341,7 +337,12 @@ Suggestions, ideas and thoughts are welcome!</p>
         <i class="icon-tag icon-large"></i>misc
     </a>
 </li>
-<li class="tag-4">
+<li class="tag-1">
+    <a href="../tag/scala.html">
+        <i class="icon-tag icon-large"></i>scala
+    </a>
+</li>
+<li class="tag-1">
     <a href="../tag/dependency-injection.html">
         <i class="icon-tag icon-large"></i>dependency injection
     </a>

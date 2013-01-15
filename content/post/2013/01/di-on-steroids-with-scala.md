@@ -42,7 +42,8 @@ The name of the pattern "Value injection on traits" is analogous to the terminol
 I have added *on traits* to *value injection* to make the contrast with classes explicit.
 You *can* do value injection on classes, but that looks a lot like the constructor injection pattern that we already know.
 
-This is how the "Value injection on traits" pattern looks like, using the movie example of Fowler:
+This is how the "Value injection on traits" pattern looks like, using the movie example of Fowler
+(or if you prefer the [Warmer example that Jonas Boner introduced](|filename|/post/2013/01/warmer-example-using-value-injection.md)):
 
 ~~~
   trait MovieFinder {
