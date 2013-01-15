@@ -8,7 +8,7 @@
     <meta name="author" content="Rintcius Blok">
 
     <!-- Le styles -->
-    <link rel="stylesheet" href="http://blog.rintcius.nl/theme/css/io-svc-simple.css" type="text/css" />
+    <link rel="stylesheet" href="./theme/css/io-svc-simple.css" type="text/css" />
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -30,10 +30,10 @@
         font-size: 6pt;
      }
     </style>
-    <link href="http://blog.rintcius.nl/theme/css/bootstrap-responsive.min.css" rel="stylesheet">
-        <link href="http://blog.rintcius.nl/theme/css/font-awesome.css" rel="stylesheet">
+    <link href="./theme/css/bootstrap-responsive.min.css" rel="stylesheet">
+        <link href="./theme/css/font-awesome.css" rel="stylesheet">
 
-    <link href="http://blog.rintcius.nl/theme/css/pygments.css" rel="stylesheet">
+    <link href="./theme/css/pygments.css" rel="stylesheet">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -41,12 +41,12 @@
     <![endif]-->
 
     <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="http://blog.rintcius.nl/theme/images/favicon.ico">
-    <link rel="apple-touch-icon" href="http://blog.rintcius.nl/theme/images/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="http://blog.rintcius.nl/theme/images/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="http://blog.rintcius.nl/theme/images/apple-touch-icon-114x114.png">
+    <link rel="shortcut icon" href="./theme/images/favicon.ico">
+    <link rel="apple-touch-icon" href="./theme/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./theme/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./theme/images/apple-touch-icon-114x114.png">
 
-    <link href="http://blog.rintcius.nl/" type="application/atom+xml" rel="alternate" title="Blok blogs ATOM Feed" />
+    <link href="./" type="application/atom+xml" rel="alternate" title="Blok blogs ATOM Feed" />
     
   </head>
 
@@ -60,23 +60,18 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="http://blog.rintcius.nl/index.html">Blok blogs </a>
+          <a class="brand" href="./index.html">Blok blogs </a>
           <div class="nav-collapse">
             <ul class="nav">
                                                                     <li class="divider-vertical"></li>
                                               <li >
-                    <a href="http://blog.rintcius.nl/category/01.html">
-						<i class="icon-folder-open icon-large"></i>01
-					</a>
-                  </li>
-                                <li >
-                    <a href="http://blog.rintcius.nl/category/post.html">
+                    <a href="./category/post.html">
 						<i class="icon-folder-open icon-large"></i>post
 					</a>
                   </li>
               
                           <ul class="nav pull-right">
-                                <li><a href="http://blog.rintcius.nl/archives.html"><i class="icon-th-list"></i>Archives</a></li>
+                                <li><a href="./archives.html"><i class="icon-th-list"></i>Archives</a></li>
                           </ul>
 
             </ul>
@@ -107,40 +102,35 @@
 <li class="nav-header"><h4><i class="icon-external-link"></i>blogroll</h4></li>
     <li><a href="http://webservices.io"><i class="icon-external-link"></i>webservices.io</a></li>
 <li class="nav-header"><h4><i class="icon-home icon-large"></i> social</h4></li>
-<li><a href="http://blog.rintcius.nl/" rel="alternate"><i class="icon-bookmark icon-large"></i>atom feed</a></li>
+<li><a href="./" rel="alternate"><i class="icon-bookmark icon-large"></i>atom feed</a></li>
     <li><a href="http://twitter.com/rintcius"><i class="icon-Twitter-sign icon-large"></i>Twitter</a></li>
 
 <li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
 <li>
-<a href="http://blog.rintcius.nl/category/01.html">
-    <i class="icon-folder-open icon-large"></i>01
-</a>
-</li>
-<li>
-<a href="http://blog.rintcius.nl/category/post.html">
+<a href="./category/post.html">
     <i class="icon-folder-open icon-large"></i>post
 </a>
 </li>
 
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 <li class="tag-4">
-    <a href="http://blog.rintcius.nl/tag/misc.html">
-        <i class="icon-tag icon-large"></i>misc
-    </a>
-</li>
-<li class="tag-4">
-    <a href="http://blog.rintcius.nl/tag/software-design.html">
+    <a href="./tag/software-design.html">
         <i class="icon-tag icon-large"></i>software design
     </a>
 </li>
 <li class="tag-4">
-    <a href="http://blog.rintcius.nl/tag/dependency-injection.html">
-        <i class="icon-tag icon-large"></i>dependency injection
+    <a href="./tag/scala.html">
+        <i class="icon-tag icon-large"></i>scala
     </a>
 </li>
 <li class="tag-4">
-    <a href="http://blog.rintcius.nl/tag/scala.html">
-        <i class="icon-tag icon-large"></i>scala
+    <a href="./tag/misc.html">
+        <i class="icon-tag icon-large"></i>misc
+    </a>
+</li>
+<li class="tag-4">
+    <a href="./tag/dependency-injection.html">
+        <i class="icon-tag icon-large"></i>dependency injection
     </a>
 </li>
 
@@ -186,16 +176,7 @@ new TWTR.Widget({
     </div><!--/.fluid-container-->
 
 
-    <script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-try {
-	var pageTracker = _gat._getTracker("UA-395810-1");
-pageTracker._trackPageview();
-} catch(err) {}</script>
-        <script type="text/javascript">
+            <script type="text/javascript">
     var disqus_shortname = 'rintcius';
     (function () {
         var s = document.createElement('script'); s.async = true;
@@ -207,7 +188,7 @@ pageTracker._trackPageview();
 
     <!-- Le javascript -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="http://blog.rintcius.nl/theme/js/jquery-1.7.2.min.js"></script>
-    <script src="http://blog.rintcius.nl/theme/js/bootstrap.min.js"></script>
+    <script src="./theme/js/jquery-1.7.2.min.js"></script>
+    <script src="./theme/js/bootstrap.min.js"></script>
   </body>
 </html>

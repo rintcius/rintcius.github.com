@@ -1,6 +1,7 @@
 Title: DI on steroids with Scala : Value injection on traits
 Date: 2013-01-15
 Tags: scala, software design, dependency injection
+Category: post
 Slug: post/di-on-steroids-with-scala-value-injection-on-traits
 
 DI on steroids with Scala : Value injection on traits
