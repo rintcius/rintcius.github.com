@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>DI on steroids with Scala : Value injection on traits</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Rintcius Blok">
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="http://blog.rintcius.nl/theme/css/io-svc-simple.css" type="text/css" />
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+      .tag-1 {
+        font-size: 13pt;
+      }
+      .tag-2 {
+        font-size: 10pt;
+      }
+      .tag-2 {
+        font-size: 8pt;
+      }
+      .tag-4 {
+        font-size: 6pt;
+     }
+    </style>
+    <link href="http://blog.rintcius.nl/theme/css/bootstrap-responsive.min.css" rel="stylesheet">
+        <link href="http://blog.rintcius.nl/theme/css/font-awesome.css" rel="stylesheet">
+
+    <link href="http://blog.rintcius.nl/theme/css/pygments.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="http://blog.rintcius.nl/theme/images/favicon.ico">
+    <link rel="apple-touch-icon" href="http://blog.rintcius.nl/theme/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="http://blog.rintcius.nl/theme/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="http://blog.rintcius.nl/theme/images/apple-touch-icon-114x114.png">
+
+    <link href="http://blog.rintcius.nl/" type="application/atom+xml" rel="alternate" title="Blok blogs ATOM Feed" />
+    
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="http://blog.rintcius.nl/index.html">Blok blogs </a>
+          <div class="nav-collapse">
+            <ul class="nav">
+                                                                    <li class="divider-vertical"></li>
+                                              <li class="active">
+                    <a href="http://blog.rintcius.nl/category/01.html">
+						<i class="icon-folder-open icon-large"></i>01
+					</a>
+                  </li>
+                                <li >
+                    <a href="http://blog.rintcius.nl/category/post.html">
+						<i class="icon-folder-open icon-large"></i>post
+					</a>
+                  </li>
+              
+                          <ul class="nav pull-right">
+                                <li><a href="http://blog.rintcius.nl/archives.html"><i class="icon-th-list"></i>Archives</a></li>
+                          </ul>
+
+            </ul>
+            <!--<p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>-->
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="span9" id="content">
+            <section id="content">
+        <article>
+                <header>
+                    <div class="page-header">
+                        <h1>
+                                <a href=""
+                                        rel="bookmark"
+                                        title="Permalink to DI on steroids with Scala : Value injection on traits">
+                                        DI on steroids with Scala : Value injection on traits
+                                </a>
+                                <a href="http://twitter.com/share" class="twitter-share-button"
+   data-count="horizontal" data-via="rintcius">Tweet</a>
+<script type="text/javascript" src="http://platform.twitter.com/widgets.js">
+</script>
+                        </h1>
+                    </div>
+                </header>
+                <div class="entry-content">
+                <div class="well">
+                        <footer class="post-info">
+<span class="label">Date</span>
+<abbr class="published" title="2013-01-15T00:00:00">
+        <i class="icon-calendar"></i>Tue 15 January 2013
+</abbr>
+<span class="label">By</span>
+<i class="icon-user"></i><a href="http://blog.rintcius.nl/author/rintcius-blok.html">Rintcius Blok</a>
+<span class="label">Category</span>
+<i class="icon-folder-open"></i><a href="http://blog.rintcius.nl/category/01.html">01</a>
+
+
+<span class="label">Tags</span>
+    <i class="icon-tag"></i><a href="http://blog.rintcius.nl/tag/scala.html">scala</a>
+    <i class="icon-tag"></i><a href="http://blog.rintcius.nl/tag/software-design.html">software design</a>
+    <i class="icon-tag"></i><a href="http://blog.rintcius.nl/tag/dependency-injection.html">dependency injection</a>
+</footer><!-- /.post-info -->                </div>
+                <h1>DI on steroids with Scala : Value injection on traits</h1>
+<h2>Introduction</h2>
+<p>This text presents the concept and characteristics of <strong>value injection on traits</strong> which is a Dependency Injection (DI)
+variant in Scala which I have been using lately instead of the
+<a href="http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/">cake pattern</a> and the
+<a href="http://www.martinfowler.com/articles/injection.html">DI variants that Martin Fowler introduced</a>.</p>
+<p>I hope to clarify the elegance of this pattern and why it works so well with Scala, both for structuring the code and doing the wiring.</p>
+<p>The cake pattern has worked for me in the past, but on larger codebases I am encountering issues with it.
+I am not going into the details of these issues here, 
+but if you are interested Adam Warski has a <a href="http://www.warski.org/blog/2011/04/di-in-scala-cake-pattern-pros-cons/">nice post</a> on this,
+which matches well with my experiences.
+Instead, I wanted to keep this text fairly minimal and focus on introducing the idea of <strong>value injection on traits</strong>.</p>
+<p>Before starting off, note that DI has 2 parts:</p>
+<ul>
+<li><strong>wirability</strong> (or - to stay closer to the term DI - injectability) - this part has become the meta-pattern of OO programming.
+  I now think of it as almost synonymous with <em>good software design</em>, or at least a necessary precondition for a good design.
+  In this text I will refer to this code as <strong>wirable code</strong>.</li>
+<li><strong>wiring</strong> (or - you got it, doesn't sound nice, but unfortunately reality demands it - injecting) -
+  in Java the wiring is typically done with a DI container/framework such as Spring or Guice, but that's just an option: 
+  the good software design meta-pattern comes with freedom of choice.
+  I will take advantage of this freedom and use Scala for writing <strong>wiring code</strong> (and wiring actually becomes fun!).</li>
+</ul>
+<p>I will start with a short introduction of the pattern using a simple example.
+This is just meant to give some basic intuition on the pattern.
+In the two sections after that, I will give a more in depth presentation of the wirable and wiring code respectively, while also giving some more realistic examples.
+And I will end with the conclusions.</p>
+<h2>Value injection on traits</h2>
+<p>The name of the pattern "Value injection on traits" is analogous to the terminology that Martin Fowler introduced.
+I have added <em>on traits</em> to <em>value injection</em> to make the contrast with classes explicit.
+You <em>can</em> do value injection on classes, but that looks a lot like the constructor injection pattern that we already know.</p>
+<p>This is how the "Value injection on traits" pattern looks like, using the movie example of Fowler:</p>
+<div class="codehilite"><pre>  trait MovieFinder {
+    def findAll:Seq[Movie]
+  }
+
+  // this is the trait where it is all about i.e. the reason that the pattern is called value injection on *traits*
+  trait MovieLister {
+    //the important *value* in the pattern with &#39;finder&#39; being the *injectable*
+    val finder: MovieFinder
+
+    def listAll: Unit = println(finder.findAll.mkString(&quot;/n&quot;))
+  }
+
+  class ColonMovieFinder(filename: String) extends MovieFinder {
+    override def findAll:Seq[Movie] = ??? //left as exercise for the bored reader
+  }
+</pre></div>
+
+
+<p>Although contrived in this simple example, the key is that <code>MovieLister</code> can be a <strong><code>trait</code></strong> (apart from a <code>class</code>) while
+nicely <strong>separating concerns</strong> by using a <code>val</code> to access the functionality of <code>MovieFinder</code>.
+The next section will show more interesting characteristics of the wirable code.</p>
+<p>The wiring code can then be as simple as this (so simple that you can hardly call it wiring):</p>
+<div class="codehilite"><pre><span class="n">val</span> <span class="n">myLister</span> <span class="o">=</span> <span class="n">new</span> <span class="n">MovieLister</span> <span class="p">{</span>
+  <span class="n">finder</span> <span class="o">=</span> <span class="n">new</span> <span class="n">ColonMovieFinder</span><span class="p">(</span><span class="s">&quot;someFile.txt&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>The section <em>structure of wiring code</em> has an example that shows the general structure.</p>
+<h2>Structure of wirable code</h2>
+<p>The wirable code of the <code>MovieLister</code> example was just enough to explain the pattern and its name.
+What is less clear from that example is that there is an interesting recursive pattern behind this form of DI (which makes DI 'go round').</p>
+<p>This <strong>recursive pattern</strong> typically has this form:</p>
+<ul>
+<li><strong>base trait</strong> - at its core usually a simple trait with a small number of (typically 1) <strong>abstract methods</strong></li>
+<li><strong>extension of base trait</strong> - at its core usually containing:<ul>
+<li>a small number of <strong>abstract injectable values</strong>; and</li>
+<li>an <strong>implementation of the abstract method</strong> that is defined in the base trait</li>
+</ul>
+</li>
+</ul>
+<p>What makes this structure <strong>recursive</strong> is that the types of the abstract injectable values are typically <strong>base traits</strong> again.</p>
+<p>Here's an annotated example from the <code>authentication</code> object of <a href="https://github.com/svc-io/io.svc.security">io.svc.security</a>
+(which is a security framework that I have created and uses the pattern all-over):</p>
+<div class="codehilite"><pre>  // *base trait*
+  trait InputValidator[-I, +U, +F] {
+    // *abstract method*
+    def validateInput(in: I): Validation[F, U]
+  }
+
+  // *extension of base trait*
+  trait CredentialsInputValidator[In, Credentials, User, +F] extends InputValidator[In, User, F] {
+
+    // *abstract, injectable value(s); typed as a base trait*
+    val credentialsExtractor: CredentialsExtractor[In, Credentials, F]
+    val authService: AuthenticationService[Credentials, User, F]
+
+    // *definition of the method that was declared in base trait, using the abstract values*
+    override def validateInput(in: In): Validation[F, User] = {
+      credentialsExtractor.extractCredentials(in).fold(
+        failure = { f =&gt; Failure(f) },
+        success = { user =&gt; authService.authenticate(user) }
+      )
+    }
+  }
+</pre></div>
+
+
+<h2>Structure of wiring code</h2>
+<p>In essence, the wiring code comes down to building a <strong>tree</strong> -
+another <strong>recursive structure</strong> - which is constructed using the 'wirable' building blocks.</p>
+<p>I will show you how I have used it in <a href="https://github.com/svc-io/io.svc.security.play.demo">io.svc.security.play.demo</a> -
+a play2 demo app for <a href="https://github.com/svc-io/io.svc.security.play">io.svc.security.play</a>
+(<code>io.svc.security.play</code> is a play 2 binding of <code>io.svc.security</code>). </p>
+<p>Here's an extract:</p>
+<div class="codehilite"><pre><span class="n">trait</span> <span class="n">DemoBasicAuth</span><span class="p">[</span><span class="n">A</span><span class="p">]</span> <span class="n">extends</span> <span class="n">PlayAuth</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">DemoUser</span><span class="p">]</span> <span class="p">{</span>
+  <span class="n">val</span> <span class="n">inputValidator</span> <span class="o">=</span> <span class="n">new</span> <span class="n">CredentialsInputValidator</span><span class="p">[</span><span class="n">Request</span><span class="p">[</span><span class="n">A</span><span class="p">],</span> <span class="n">UsernamePasswordCredentials</span><span class="p">,</span>
+                                                     <span class="n">DemoUser</span><span class="p">,</span> <span class="n">AuthenticationFailure</span><span class="p">]</span> <span class="p">{</span>
+    <span class="n">val</span> <span class="n">credentialsExtractor</span> <span class="o">=</span> <span class="n">new</span> <span class="n">PlayBasicAuthenticationCredentialsExtractor</span><span class="p">[</span><span class="n">A</span><span class="p">]</span>
+    <span class="n">val</span> <span class="n">authService</span> <span class="o">=</span> <span class="n">demoSecurity</span><span class="p">.</span><span class="n">demoAuthService</span>
+  <span class="p">}</span>
+  <span class="n">val</span> <span class="n">authFailureHandler</span> <span class="o">=</span> <span class="n">playAuthentication</span><span class="p">.</span><span class="n">authFailureHandler</span><span class="p">[</span><span class="n">A</span><span class="p">](</span>
+                             <span class="n">demoSecurity</span><span class="p">.</span><span class="n">unauthorizedHtml</span><span class="p">.</span><span class="n">withHeaders</span><span class="p">((</span><span class="s">&quot;WWW-Authenticate&quot;</span><span class="p">,</span> <span class="s">&quot;Basic realm=</span><span class="se">\&quot;</span><span class="s">Demo</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="p">)))</span>
+<span class="p">}</span>
+
+<span class="n">trait</span> <span class="n">DemoBasicAuthSecurity</span><span class="p">[</span><span class="n">A</span><span class="p">]</span> <span class="n">extends</span> <span class="n">PlaySecurity</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">DemoUser</span><span class="p">]</span> <span class="p">{</span>
+  <span class="n">val</span> <span class="n">auth</span> <span class="o">=</span> <span class="n">new</span> <span class="n">DemoBasicAuth</span><span class="p">[</span><span class="n">A</span><span class="p">]</span> <span class="p">{}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>So, in this way, wiring becomes like building a <strong>flexible tree</strong> using a syntax that nicely shows the <strong>structure of the tree</strong>.</p>
+<p>It's flexible in the sense that parts of the tree can be constructed <strong>inline</strong> (like the <code>inputValidator</code> in <code>DemoBasicAuth</code>),
+while it is just as easy to <strong>reuse</strong> definitions that are made elsewhere. For example:</p>
+<ul>
+<li>reusing a <code>val</code>: <code>val authService = demoSecurity.demoAuthService</code> </li>
+<li>applying a <code>def</code>: <code>val authFailureHandler</code> calls the generic function <code>playAuthentication.authFailureHandler</code> to instantiate a specific <code>AuthFailureHandler</code>).</li>
+<li>reusing a <code>trait</code>: <code>val auth = new DemoBasicAuth[A] {}</code></li>
+</ul>
+<p>It is also flexible in the sense that the structure of each subtree is determined by the <strong>choice of the extension of the base trait for that subtree</strong>.
+E.g. choosing <code>CredentialsInputValidator</code> as <code>inputValidator</code> implies that <code>credentialsExtractor</code>and <code>authService</code> need to be assigned on the next level,
+but any other <code>InputValidator</code> can take its place defining its own subtree structure,
+including a dummy <code>InputValidator</code> like this which defines <code>InputValidator</code>'s abstract method on the fly (atypical for the pattern) and has no <code>val</code>'s on the next level:</p>
+<div class="codehilite"><pre><span class="n">val</span> <span class="n">inputValidator</span> <span class="o">=</span> <span class="n">new</span> <span class="n">InputValidator</span><span class="p">[</span><span class="n">Request</span><span class="p">[</span><span class="n">A</span><span class="p">],</span> <span class="n">DemoUser</span><span class="p">,</span> <span class="n">AuthenticationFailure</span><span class="p">]</span> <span class="p">{</span>
+  <span class="n">def</span> <span class="n">validateInput</span><span class="p">(</span><span class="n">in</span><span class="o">:</span> <span class="n">Request</span><span class="p">[</span><span class="n">A</span><span class="p">])</span> <span class="o">=</span> <span class="n">Success</span><span class="p">(</span><span class="n">DemoUser</span><span class="p">(</span><span class="s">&quot;joe&quot;</span><span class="p">,</span> <span class="s">&quot;password4joe&quot;</span><span class="p">))</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>In the former example I have chosen to reuse <code>DemoBasicAuth</code> and <code>demoSecurity.demoAuthService</code>.
+But is also interesting to inline them and see how a larger tree looks like:</p>
+<div class="codehilite"><pre><span class="n">trait</span> <span class="n">DemoBasicAuthSecurity</span><span class="p">[</span><span class="n">A</span><span class="p">]</span> <span class="n">extends</span> <span class="n">PlaySecurity</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">DemoUser</span><span class="p">]</span> <span class="p">{</span>
+  <span class="n">val</span> <span class="n">auth</span> <span class="o">=</span> <span class="n">new</span> <span class="n">PlayAuth</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">DemoUser</span><span class="p">]</span> <span class="p">{</span>
+    <span class="n">val</span> <span class="n">inputValidator</span> <span class="o">=</span> <span class="n">new</span> <span class="n">CredentialsInputValidator</span><span class="p">[</span><span class="n">Request</span><span class="p">[</span><span class="n">A</span><span class="p">],</span> <span class="n">UsernamePasswordCredentials</span><span class="p">,</span>
+                                                       <span class="n">DemoUser</span><span class="p">,</span> <span class="n">AuthenticationFailure</span><span class="p">]</span> <span class="p">{</span>
+      <span class="n">val</span> <span class="n">credentialsExtractor</span> <span class="o">=</span> <span class="n">new</span> <span class="n">PlayBasicAuthenticationCredentialsExtractor</span><span class="p">[</span><span class="n">A</span><span class="p">]</span>
+      <span class="n">val</span> <span class="n">authService</span> <span class="o">=</span> <span class="n">new</span> <span class="n">UsernamePasswordCredentialsAuthenticationService</span><span class="p">[</span><span class="n">DemoUser</span><span class="p">]</span> <span class="p">{</span>
+        <span class="n">val</span> <span class="n">userService</span> <span class="o">=</span> <span class="n">demoSecurity</span><span class="p">.</span><span class="n">demoUserService</span>
+        <span class="n">val</span> <span class="n">credentialsValidator</span> <span class="o">=</span> <span class="n">demoSecurity</span><span class="p">.</span><span class="n">demoCredentialsValidator</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">val</span> <span class="n">authFailureHandler</span> <span class="o">=</span> <span class="n">playAuthentication</span><span class="p">.</span><span class="n">authFailureHandler</span><span class="p">[</span><span class="n">A</span><span class="p">](</span>
+                              <span class="n">demoSecurity</span><span class="p">.</span><span class="n">unauthorizedHtml</span><span class="p">.</span><span class="n">withHeaders</span><span class="p">((</span><span class="s">&quot;WWW-Authenticate&quot;</span><span class="p">,</span> <span class="s">&quot;Basic realm=</span><span class="se">\&quot;</span><span class="s">Demo</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="p">)))</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h1>Conclusion</h1>
+<p>This pattern certainly changed <em>my</em> way of programming in Scala. There are a couple of things I like about it.</p>
+<p>One is that it <strong>maps great to the core DI concepts</strong> that I already know (and are good in my eyes), which makes the code <strong>intuitive to write and read</strong>.</p>
+<p>It is also concise in the sense that both the wirable and the wiring code are <strong>free of biolerplate</strong>.
+E.g. you don't have to make any alterations or additions to the code just for the sake of making the code properly wirable
+(as opposed to the cake pattern e.g. where the code is wrapped in a Component among others).</p>
+<p>Another thing I like is the way it takes advantage of the Scala language, e.g. the fact that the pattern also <strong>works on traits</strong>.
+This makes applying DI very powerful and flexible.</p>
+<p>Also the <strong>wiring code</strong> is able to take full advantage of the Scala language: <strong>no DI container/framework/library is required</strong>,
+and its <strong>building blocks can be reused in a powerful, minimalistic (Scalaistic) way</strong>.
+And finally I like how the <strong>structure of the wiring</strong> is immediately visible.</p>
+<p>I hope it will be of value to you too. 
+Suggestions, ideas and thoughts are welcome!</p>
+                </div><!-- /.entry-content -->
+                                <div class="comments">
+                <h2>Comments !</h2>
+                        <div id="disqus_thread"></div>
+                        <script type="text/javascript">
+                           var disqus_identifier = "post/di-on-steroids-with-scala-value-injection-on-traits.html";
+                           (function() {
+                                var dsq = document.createElement('script');
+                                dsq.type = 'text/javascript'; dsq.async = true;
+                                dsq.src = 'http://rintcius.disqus.com/embed.js';
+                                (document.getElementsByTagName('head')[0] ||
+                                 document.getElementsByTagName('body')[0]).appendChild(dsq);
+                          })();
+                        </script>
+                </div>
+                        </article>
+</section>
+        </div><!--/span-->
+
+                <div class="span3 well sidebar-nav" id="sidebar">
+            <ul class="nav nav-list">
+<li class="nav-header"><h4><i class="icon-external-link"></i>blogroll</h4></li>
+    <li><a href="http://webservices.io"><i class="icon-external-link"></i>webservices.io</a></li>
+<li class="nav-header"><h4><i class="icon-home icon-large"></i> social</h4></li>
+<li><a href="http://blog.rintcius.nl/" rel="alternate"><i class="icon-bookmark icon-large"></i>atom feed</a></li>
+    <li><a href="http://twitter.com/rintcius"><i class="icon-Twitter-sign icon-large"></i>Twitter</a></li>
+
+<li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
+<li>
+<a href="http://blog.rintcius.nl/category/01.html">
+    <i class="icon-folder-open icon-large"></i>01
+</a>
+</li>
+<li>
+<a href="http://blog.rintcius.nl/category/post.html">
+    <i class="icon-folder-open icon-large"></i>post
+</a>
+</li>
+
+<li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
+<li class="tag-4">
+    <a href="http://blog.rintcius.nl/tag/misc.html">
+        <i class="icon-tag icon-large"></i>misc
+    </a>
+</li>
+<li class="tag-4">
+    <a href="http://blog.rintcius.nl/tag/software-design.html">
+        <i class="icon-tag icon-large"></i>software design
+    </a>
+</li>
+<li class="tag-4">
+    <a href="http://blog.rintcius.nl/tag/dependency-injection.html">
+        <i class="icon-tag icon-large"></i>dependency injection
+    </a>
+</li>
+<li class="tag-4">
+    <a href="http://blog.rintcius.nl/tag/scala.html">
+        <i class="icon-tag icon-large"></i>scala
+    </a>
+</li>
+
+<li class="nav-header"><h4><i class="icon-twitter-sign"></i>Twitter</h4></li>
+<script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
+<script>
+new TWTR.Widget({
+  version: 2,
+  type: 'profile',
+  rpp: 4,
+  interval: 30000,
+  width: 'auto',
+  height: 300,
+  theme: {
+	shell: {
+	  background: '#f5f5f5',
+	  color: '#000000'
+	},
+	tweets: {
+	  background: '#ffffff',
+	  color: '#000000',
+	  links: '#1a50a1'
+	}
+  },
+  features: {
+	scrollbar: false,
+	loop: false,
+	live: false,
+	behavior: 'all'
+  }
+}).render().setUser('rintcius').start();
+</script>
+
+</ul>        </div><!--/.well -->
+
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+      </footer>
+
+    </div><!--/.fluid-container-->
+
+
+    <script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-395810-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+        <script type="text/javascript">
+    var disqus_shortname = 'rintcius';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+
+    <!-- Le javascript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="http://blog.rintcius.nl/theme/js/jquery-1.7.2.min.js"></script>
+    <script src="http://blog.rintcius.nl/theme/js/bootstrap.min.js"></script>
+  </body>
+</html>
