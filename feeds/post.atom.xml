@@ -1,5 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Blok blogs</title><link href="http://blog.rintcius.nl/" rel="alternate"></link><link href="http://blog.rintcius.nl/feeds/post.atom.xml" rel="self"></link><id>http://blog.rintcius.nl/</id><updated>2013-01-13T00:00:00+01:00</updated><entry><title>New blog</title><link href="http://blog.rintcius.nl/post/new-blog.html" rel="alternate"></link><updated>2013-01-13T00:00:00+01:00</updated><author><name>Rintcius Blok</name></author><id>tag:blog.rintcius.nl,2013-01-13:post/new-blog.html</id><summary type="html">&lt;p&gt;This is the place of my new blog, moving away from Wordpress, and moving to &lt;a href="http://docs.getpelican.com/"&gt;Pelican&lt;/a&gt;.
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Blok blogs</title><link href="http://blog.rintcius.nl/" rel="alternate"></link><link href="http://blog.rintcius.nl/feeds/post.atom.xml" rel="self"></link><id>http://blog.rintcius.nl/</id><updated>2013-01-15T00:00:00+01:00</updated><entry><title>DI on steroids with Scala : Value injection on traits</title><link href="http://blog.rintcius.nl/post/di-on-steroids-with-scala-value-injection-on-traits.html" rel="alternate"></link><updated>2013-01-15T00:00:00+01:00</updated><author><name>Rintcius Blok</name></author><id>tag:blog.rintcius.nl,2013-01-15:post/di-on-steroids-with-scala-value-injection-on-traits.html</id><summary type="html">&lt;h1&gt;DI on steroids with Scala : Value injection on traits&lt;/h1&gt;
+&lt;h2&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;This text presents the concept and characteristics of &lt;strong&gt;value injection on traits&lt;/strong&gt; which is a Dependency Injection (DI)
+variant in Scala which I have been using lately instead of the
+&lt;a href="http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/"&gt;cake pattern&lt;/a&gt; and the
+&lt;a href="http://www.martinfowler.com/articles/injection.html"&gt;DI variants that Martin Fowler introduced&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I hope to clarify the elegance of this pattern and why it works so well with Scala, both for structuring the code and doing the wiring.&lt;/p&gt;
+&lt;p&gt;The cake pattern has worked for me in the past, but on larger codebases I am encountering issues with it.
+I am not going into the details of these issues here, 
+but if you are interested Adam Warski has a &lt;a href="http://www.warski.org/blog/2011/04/di-in-scala-cake-pattern-pros-cons/"&gt;nice post&lt;/a&gt; on this,
+which matches well with my experiences.
+Instead, I wanted to keep this text fairly minimal and focus on introducing the idea of &lt;strong&gt;value injection on traits&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Before starting off, note that DI has 2 parts:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;wirability&lt;/strong&gt; (or - to stay closer to the term DI - injectability) - this part has become the meta-pattern of OO programming.
+  I now think of it as almost synonymous with &lt;em&gt;good software design&lt;/em&gt;, or at least a necessary precondition for a good design.
+  In this text I will refer to this code as &lt;strong&gt;wirable code&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;wiring&lt;/strong&gt; (or - you got it, doesn't sound nice, but unfortunately reality demands it - injecting) -
+  in Java the wiring is typically done with a DI container/framework such as Spring or Guice, but that's just an option: 
+  the good software design meta-pattern comes with freedom of choice.
+  I will take advantage of this freedom and use Scala for writing &lt;strong&gt;wiring code&lt;/strong&gt; (and wiring actually becomes fun!).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I will start with a short introduction of the pattern using a simple example.
+This is just meant to give some basic intuition on the pattern.
+In the two sections after that, I will give a more in depth presentation of the wirable and wiring code respectively, while also giving some more realistic examples.
+And I will end with the conclusions.&lt;/p&gt;
+&lt;h2&gt;Value injection on traits&lt;/h2&gt;
+&lt;p&gt;The name of the pattern "Value injection on traits" is analogous to the terminology that Martin Fowler introduced.
+I have added &lt;em&gt;on traits&lt;/em&gt; to &lt;em&gt;value injection&lt;/em&gt; to make the contrast with classes explicit.
+You &lt;em&gt;can&lt;/em&gt; do value injection on classes, but that looks a lot like the constructor injection pattern that we already know.&lt;/p&gt;
+&lt;p&gt;This is how the "Value injection on traits" pattern looks like, using the movie example of Fowler:&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;  trait MovieFinder {
+    def findAll:Seq[Movie]
+  }
+
+  // this is the trait where it is all about i.e. the reason that the pattern is called value injection on *traits*
+  trait MovieLister {
+    //the important *value* in the pattern with &amp;#39;finder&amp;#39; being the *injectable*
+    val finder: MovieFinder
+
+    def listAll: Unit = println(finder.findAll.mkString(&amp;quot;/n&amp;quot;))
+  }
+
+  class ColonMovieFinder(filename: String) extends MovieFinder {
+    override def findAll:Seq[Movie] = ??? //left as exercise for the bored reader
+  }
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Although contrived in this simple example, the key is that &lt;code&gt;MovieLister&lt;/code&gt; can be a &lt;strong&gt;&lt;code&gt;trait&lt;/code&gt;&lt;/strong&gt; (apart from a &lt;code&gt;class&lt;/code&gt;) while
+nicely &lt;strong&gt;separating concerns&lt;/strong&gt; by using a &lt;code&gt;val&lt;/code&gt; to access the functionality of &lt;code&gt;MovieFinder&lt;/code&gt;.
+The next section will show more interesting characteristics of the wirable code.&lt;/p&gt;
+&lt;p&gt;The wiring code can then be as simple as this (so simple that you can hardly call it wiring):&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="n"&gt;myLister&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;MovieLister&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="n"&gt;finder&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;ColonMovieFinder&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;someFile.txt&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The section &lt;em&gt;structure of wiring code&lt;/em&gt; has an example that shows the general structure.&lt;/p&gt;
+&lt;h2&gt;Structure of wirable code&lt;/h2&gt;
+&lt;p&gt;The wirable code of the &lt;code&gt;MovieLister&lt;/code&gt; example was just enough to explain the pattern and its name.
+What is less clear from that example is that there is an interesting recursive pattern behind this form of DI (which makes DI 'go round').&lt;/p&gt;
+&lt;p&gt;This &lt;strong&gt;recursive pattern&lt;/strong&gt; typically has this form:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;base trait&lt;/strong&gt; - at its core usually a simple trait with a small number of (typically 1) &lt;strong&gt;abstract methods&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;extension of base trait&lt;/strong&gt; - at its core usually containing:&lt;ul&gt;
+&lt;li&gt;a small number of &lt;strong&gt;abstract injectable values&lt;/strong&gt;; and&lt;/li&gt;
+&lt;li&gt;an &lt;strong&gt;implementation of the abstract method&lt;/strong&gt; that is defined in the base trait&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;What makes this structure &lt;strong&gt;recursive&lt;/strong&gt; is that the types of the abstract injectable values are typically &lt;strong&gt;base traits&lt;/strong&gt; again.&lt;/p&gt;
+&lt;p&gt;Here's an annotated example from the &lt;code&gt;authentication&lt;/code&gt; object of &lt;a href="https://github.com/svc-io/io.svc.security"&gt;io.svc.security&lt;/a&gt;
+(which is a security framework that I have created and uses the pattern all-over):&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;  // *base trait*
+  trait InputValidator[-I, +U, +F] {
+    // *abstract method*
+    def validateInput(in: I): Validation[F, U]
+  }
+
+  // *extension of base trait*
+  trait CredentialsInputValidator[In, Credentials, User, +F] extends InputValidator[In, User, F] {
+
+    // *abstract, injectable value(s); typed as a base trait*
+    val credentialsExtractor: CredentialsExtractor[In, Credentials, F]
+    val authService: AuthenticationService[Credentials, User, F]
+
+    // *definition of the method that was declared in base trait, using the abstract values*
+    override def validateInput(in: In): Validation[F, User] = {
+      credentialsExtractor.extractCredentials(in).fold(
+        failure = { f =&amp;gt; Failure(f) },
+        success = { user =&amp;gt; authService.authenticate(user) }
+      )
+    }
+  }
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Structure of wiring code&lt;/h2&gt;
+&lt;p&gt;In essence, the wiring code comes down to building a &lt;strong&gt;tree&lt;/strong&gt; -
+another &lt;strong&gt;recursive structure&lt;/strong&gt; - which is constructed using the 'wirable' building blocks.&lt;/p&gt;
+&lt;p&gt;I will show you how I have used it in &lt;a href="https://github.com/svc-io/io.svc.security.play.demo"&gt;io.svc.security.play.demo&lt;/a&gt; -
+a play2 demo app for &lt;a href="https://github.com/svc-io/io.svc.security.play"&gt;io.svc.security.play&lt;/a&gt;
+(&lt;code&gt;io.svc.security.play&lt;/code&gt; is a play 2 binding of &lt;code&gt;io.svc.security&lt;/code&gt;). &lt;/p&gt;
+&lt;p&gt;Here's an extract:&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;trait&lt;/span&gt; &lt;span class="n"&gt;DemoBasicAuth&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="n"&gt;extends&lt;/span&gt; &lt;span class="n"&gt;PlayAuth&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;DemoUser&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="n"&gt;inputValidator&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;CredentialsInputValidator&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;Request&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;UsernamePasswordCredentials&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                                                     &lt;span class="n"&gt;DemoUser&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;AuthenticationFailure&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="n"&gt;credentialsExtractor&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;PlayBasicAuthenticationCredentialsExtractor&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="n"&gt;authService&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;demoSecurity&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;demoAuthService&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+  &lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="n"&gt;authFailureHandler&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;playAuthentication&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;authFailureHandler&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;](&lt;/span&gt;
+                             &lt;span class="n"&gt;demoSecurity&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;unauthorizedHtml&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;withHeaders&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;WWW-Authenticate&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Basic realm=&lt;/span&gt;&lt;span class="se"&gt;\&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;Demo&lt;/span&gt;&lt;span class="se"&gt;\&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="n"&gt;trait&lt;/span&gt; &lt;span class="n"&gt;DemoBasicAuthSecurity&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="n"&gt;extends&lt;/span&gt; &lt;span class="n"&gt;PlaySecurity&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;DemoUser&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="n"&gt;auth&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;DemoBasicAuth&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;So, in this way, wiring becomes like building a &lt;strong&gt;flexible tree&lt;/strong&gt; using a syntax that nicely shows the &lt;strong&gt;structure of the tree&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;It's flexible in the sense that parts of the tree can be constructed &lt;strong&gt;inline&lt;/strong&gt; (like the &lt;code&gt;inputValidator&lt;/code&gt; in &lt;code&gt;DemoBasicAuth&lt;/code&gt;),
+while it is just as easy to &lt;strong&gt;reuse&lt;/strong&gt; definitions that are made elsewhere. For example:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;reusing a &lt;code&gt;val&lt;/code&gt;: &lt;code&gt;val authService = demoSecurity.demoAuthService&lt;/code&gt; &lt;/li&gt;
+&lt;li&gt;applying a &lt;code&gt;def&lt;/code&gt;: &lt;code&gt;val authFailureHandler&lt;/code&gt; calls the generic function &lt;code&gt;playAuthentication.authFailureHandler&lt;/code&gt; to instantiate a specific &lt;code&gt;AuthFailureHandler&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;reusing a &lt;code&gt;trait&lt;/code&gt;: &lt;code&gt;val auth = new DemoBasicAuth[A] {}&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;It is also flexible in the sense that the structure of each subtree is determined by the &lt;strong&gt;choice of the extension of the base trait for that subtree&lt;/strong&gt;.
+E.g. choosing &lt;code&gt;CredentialsInputValidator&lt;/code&gt; as &lt;code&gt;inputValidator&lt;/code&gt; implies that &lt;code&gt;credentialsExtractor&lt;/code&gt;and &lt;code&gt;authService&lt;/code&gt; need to be assigned on the next level,
+but any other &lt;code&gt;InputValidator&lt;/code&gt; can take its place defining its own subtree structure,
+including a dummy &lt;code&gt;InputValidator&lt;/code&gt; like this which defines &lt;code&gt;InputValidator&lt;/code&gt;'s abstract method on the fly (atypical for the pattern) and has no &lt;code&gt;val&lt;/code&gt;'s on the next level:&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="n"&gt;inputValidator&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;InputValidator&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;Request&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;DemoUser&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;AuthenticationFailure&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="n"&gt;def&lt;/span&gt; &lt;span class="n"&gt;validateInput&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;in&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Request&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Success&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;DemoUser&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;joe&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;password4joe&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;In the former example I have chosen to reuse &lt;code&gt;DemoBasicAuth&lt;/code&gt; and &lt;code&gt;demoSecurity.demoAuthService&lt;/code&gt;.
+But is also interesting to inline them and see how a larger tree looks like:&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;trait&lt;/span&gt; &lt;span class="n"&gt;DemoBasicAuthSecurity&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="n"&gt;extends&lt;/span&gt; &lt;span class="n"&gt;PlaySecurity&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;DemoUser&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="n"&gt;auth&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;PlayAuth&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;DemoUser&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="n"&gt;inputValidator&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;CredentialsInputValidator&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;Request&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;UsernamePasswordCredentials&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                                                       &lt;span class="n"&gt;DemoUser&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;AuthenticationFailure&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      &lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="n"&gt;credentialsExtractor&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;PlayBasicAuthenticationCredentialsExtractor&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+      &lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="n"&gt;authService&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;UsernamePasswordCredentialsAuthenticationService&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;DemoUser&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="n"&gt;userService&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;demoSecurity&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;demoUserService&lt;/span&gt;
+        &lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="n"&gt;credentialsValidator&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;demoSecurity&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;demoCredentialsValidator&lt;/span&gt;
+      &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="n"&gt;authFailureHandler&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;playAuthentication&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;authFailureHandler&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;](&lt;/span&gt;
+                              &lt;span class="n"&gt;demoSecurity&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;unauthorizedHtml&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;withHeaders&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;WWW-Authenticate&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Basic realm=&lt;/span&gt;&lt;span class="se"&gt;\&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;Demo&lt;/span&gt;&lt;span class="se"&gt;\&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;This pattern certainly changed &lt;em&gt;my&lt;/em&gt; way of programming in Scala. There are a couple of things I like about it.&lt;/p&gt;
+&lt;p&gt;One is that it &lt;strong&gt;maps great to the core DI concepts&lt;/strong&gt; that I already know (and are good in my eyes), which makes the code &lt;strong&gt;intuitive to write and read&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;It is also concise in the sense that both the wirable and the wiring code are &lt;strong&gt;free of biolerplate&lt;/strong&gt;.
+E.g. you don't have to make any alterations or additions to the code just for the sake of making the code properly wirable
+(as opposed to the cake pattern e.g. where the code is wrapped in a Component among others).&lt;/p&gt;
+&lt;p&gt;Another thing I like is the way it takes advantage of the Scala language, e.g. the fact that the pattern also &lt;strong&gt;works on traits&lt;/strong&gt;.
+This makes applying DI very powerful and flexible.&lt;/p&gt;
+&lt;p&gt;Also the &lt;strong&gt;wiring code&lt;/strong&gt; is able to take full advantage of the Scala language: &lt;strong&gt;no DI container/framework/library is required&lt;/strong&gt;,
+and its &lt;strong&gt;building blocks can be reused in a powerful, minimalistic (Scalaistic) way&lt;/strong&gt;.
+And finally I like how the &lt;strong&gt;structure of the wiring&lt;/strong&gt; is immediately visible.&lt;/p&gt;
+&lt;p&gt;I hope it will be of value to you too. 
+Suggestions, ideas and thoughts are welcome!&lt;/p&gt;</summary><category term="scala"></category><category term="software design"></category><category term="dependency injection"></category></entry><entry><title>New blog</title><link href="http://blog.rintcius.nl/post/new-blog.html" rel="alternate"></link><updated>2013-01-13T00:00:00+01:00</updated><author><name>Rintcius Blok</name></author><id>tag:blog.rintcius.nl,2013-01-13:post/new-blog.html</id><summary type="html">&lt;p&gt;This is the place of my new blog, moving away from Wordpress, and moving to &lt;a href="http://docs.getpelican.com/"&gt;Pelican&lt;/a&gt;.
 Pelican is a static site generator written in Python which enables serving a site directly from Github.&lt;/p&gt;
 &lt;p&gt;Pelican makes writing a post as easy as pushing a file to Github.
 So writing has become more like programming, which increases the chances of me blogging more often ;)&lt;/p&gt;</summary><category term="misc"></category></entry></feed>
