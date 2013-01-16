@@ -73,6 +73,7 @@ github-proj: publish
 	ghp-import -p $(OUTPUTDIR)
 
 github-site: publish
-	ghp-import -b master -p $(OUTPUTDIR)
+	ghp-import -b master $(OUTPUTDIR)
+	git push origin master
 
 .PHONY: html help clean regenerate serve devserver publish ssh_upload rsync_upload dropbox_upload ftp_upload github
