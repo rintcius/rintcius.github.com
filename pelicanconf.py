@@ -13,7 +13,8 @@ DEFAULT_LANG = u'en'
 LINKS =  (('webservices.io', 'http://webservices.io'),)
 
 # Social widget
-SOCIAL = (('Twitter', 'http://twitter.com/rintcius'),)
+SOCIAL = (('twitter', 'http://twitter.com/rintcius'),
+          ('github', 'http://github.com/rintcius'))
 
 FILES_TO_COPY = (('extra/CNAME', 'CNAME'),)
 
@@ -33,3 +34,6 @@ ARTICLE_LANG_SAVE_AS = '{slug}-{lang}.html'
 
 DISQUS_SITENAME = 'rintcius'
 TWITTER_USERNAME = 'rintcius'
+
+from pelican.plugins import related_posts
+PLUGINS = [related_posts]

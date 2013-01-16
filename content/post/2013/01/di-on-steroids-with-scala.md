@@ -4,8 +4,6 @@ Tags: scala, software design, dependency injection
 Category: post
 Slug: post/di-on-steroids-with-scala-value-injection-on-traits
 
-DI on steroids with Scala : Value injection on traits
-=========================
 Introduction
 ------------
 This text presents the concept and characteristics of **value injection on traits** which is a Dependency Injection (DI)
