@@ -10,13 +10,6 @@
     <!-- Le styles -->
     <link rel="stylesheet" href="http://blog.rintcius.nl/theme/css/io-svc-simple.css" type="text/css" />
     <style type="text/css">
-      body {
-        padding-top: 60px;
-        padding-bottom: 40px;
-      }
-      .sidebar-nav {
-        padding: 9px 0;
-      }
       .tag-1 {
         font-size: 13pt;
       }
@@ -28,7 +21,25 @@
       }
       .tag-4 {
         font-size: 6pt;
-     }
+      }
+      .well {
+        border-color: #16212A;
+      }
+      .sidebar-nav h4 {
+        color: #16212A;
+      }
+      .sidebar-nav h4 i {
+        color: #16212A;
+      }
+      .sidebar-nav i {
+        color:  #a0d6ff;
+      }
+      .sidebar-nav li {
+          list-style: none;
+      }
+      #content {
+          padding-top: 70px;
+      }
     </style>
     <link href="http://blog.rintcius.nl/theme/css/bootstrap-responsive.min.css" rel="stylesheet">
         <link href="http://blog.rintcius.nl/theme/css/font-awesome.css" rel="stylesheet">
@@ -84,7 +95,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="span9" id="content">
-            <section id="content">
+            <section>
         <article>
                 <header>
                     <div class="page-header">
@@ -102,8 +113,11 @@
                     </div>
                 </header>
                 <div class="entry-content">
-                <div class="well">
-                        <footer class="post-info">
+                <p>Here is the Warmer example (which was introduced <a href="http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/">here</a>)
+using <a href="http://blog.rintcius.nl/post/di-on-steroids-with-scala-value-injection-on-traits.html">value injection on traits</a>:</p>
+<script src="https://gist.github.com/4538061.js"></script>
+                    <div class="well">
+                            <footer class="post-info">
 <span class="label">Date</span>
 <abbr class="published" title="2013-01-15T00:00:00">
         <i class="icon-calendar"></i>Tue 15 January 2013
@@ -118,10 +132,7 @@
     <i class="icon-tag"></i><a href="http://blog.rintcius.nl/tag/scala.html">scala</a>
     <i class="icon-tag"></i><a href="http://blog.rintcius.nl/tag/software-design.html">software design</a>
     <i class="icon-tag"></i><a href="http://blog.rintcius.nl/tag/dependency-injection.html">dependency injection</a>
-</footer><!-- /.post-info -->                </div>
-                <p>Here is the Warmer example (which was introduced <a href="http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/">here</a>)
-using <a href="http://blog.rintcius.nl/post/di-on-steroids-with-scala-value-injection-on-traits.html">value injection on traits</a>:</p>
-<script src="https://gist.github.com/4538061.js"></script>
+</footer><!-- /.post-info -->                    </div>
                 </div><!-- /.entry-content -->
                                 <div class="comments">
                 <h2>Comments</h2>
@@ -141,44 +152,71 @@ using <a href="http://blog.rintcius.nl/post/di-on-steroids-with-scala-value-inje
 </section>
         </div><!--/span-->
 
-                <div class="span3 well sidebar-nav" id="sidebar">
-            <ul class="nav nav-list">
-<li class="nav-header"><h4><i class="icon-external-link"></i>blogroll</h4></li>
-    <li><a href="http://webservices.io"><i class="icon-external-link"></i>webservices.io</a></li>
-<li class="nav-header"><h4><i class="icon-home icon-large"></i> social</h4></li>
-<li><a href="http://blog.rintcius.nl/" rel="alternate"><i class="icon-bookmark icon-large"></i>atom feed</a></li>
-    <li><a href="http://twitter.com/rintcius"><i class="icon-Twitter-sign icon-large"></i>Twitter</a></li>
 
-<li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
-<li>
-<a href="http://blog.rintcius.nl/category/post.html">
-    <i class="icon-folder-open icon-large"></i>post
-</a>
-</li>
+            <div style="margin-top: 100px" class="span3 sidebar-nav" id="sidebar">
 
-<li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
-<li class="tag-1">
-    <a href="http://blog.rintcius.nl/tag/dependency-injection.html">
-        <i class="icon-tag icon-large"></i>dependency injection
-    </a>
-</li>
-<li class="tag-4">
-    <a href="http://blog.rintcius.nl/tag/misc.html">
-        <i class="icon-tag icon-large"></i>misc
-    </a>
-</li>
-<li class="tag-1">
-    <a href="http://blog.rintcius.nl/tag/scala.html">
-        <i class="icon-tag icon-large"></i>scala
-    </a>
-</li>
-<li class="tag-1">
-    <a href="http://blog.rintcius.nl/tag/software-design.html">
-        <i class="icon-tag icon-large"></i>software design
-    </a>
-</li>
+    <ul class="nav nav-list">
+                <div class="well">
+            <li class="nav-header"><h4><i class="icon-external-link"></i>links</h4></li>
+            <ul>
+                                <li><i class="icon-external-link"></i><a href="http://webservices.io">webservices.io</a></li>
+                            </ul>
+        </div>
+        
+                <div class="well">
+            <li class="nav-header"><h4><i class="icon-home icon-large"></i>social</h4></li>
+            <ul>
+                <li>
+                    <i style="color: #a0d6ff;" class="icon-bookmark icon-large"></i><a href="http://blog.rintcius.nl/" rel="alternate">atom feed</a>
+                </li>
+                                                <li>
+                    <i class="icon-twitter-sign icon-large"></i><a href="http://twitter.com/rintcius">twitter</a>
+                </li>
+                                <li>
+                    <i class="icon-github-sign icon-large"></i><a href="http://github.com/rintcius">github</a>
+                </li>
+                            </ul>
+        </div>
+        
+        <div class="well">
+            <li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
+            <ul>
+                                <li>
+                    <i class="icon-folder-open icon-large"></i><a href="http://blog.rintcius.nl/category/post.html">post</a>
+                </li>
+                            </ul>
+        </div>
 
-<li class="nav-header"><h4><i class="icon-twitter-sign"></i>Twitter</h4></li>
+                        <div class="well">
+            <li class="nav-header"><h4><i class="icon-file icon-large"></i>Related Posts</h4></li>
+            <ul>
+                                <li>
+                    <i class="icon-file icon-large"></i>
+                    <a href="http://blog.rintcius.nl/post/di-on-steroids-with-scala-value-injection-on-traits.html">DI on steroids with Scala : Value injection on traits</a>
+                </li>
+                            </ul>
+        </div>
+                
+        <div class="well">
+            <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
+            <ul>
+                                <li class="tag-1">
+                    <a href="http://blog.rintcius.nl/tag/dependency-injection.html">dependency injection</a>
+                </li>
+                                <li class="tag-4">
+                    <a href="http://blog.rintcius.nl/tag/misc.html">misc</a>
+                </li>
+                                <li class="tag-1">
+                    <a href="http://blog.rintcius.nl/tag/software-design.html">software design</a>
+                </li>
+                                <li class="tag-1">
+                    <a href="http://blog.rintcius.nl/tag/scala.html">scala</a>
+                </li>
+                            </ul>
+        </div>
+
+        <div class="well">
+        <li class="nav-header"><h4><i class="icon-twitter-sign"></i>Twitter</h4></li>
 <script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
 <script>
 new TWTR.Widget({
@@ -207,8 +245,11 @@ new TWTR.Widget({
   }
 }).render().setUser('rintcius').start();
 </script>
+        </div>
+        
+            </ul>
 
-</ul>        </div><!--/.well -->
+</div><!--/.well -->
 
       </div><!--/row-->
 
