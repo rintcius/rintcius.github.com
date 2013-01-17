@@ -40,6 +40,10 @@
       #content {
           padding-top: 70px;
       }
+      #about-me {
+          background-color: #a0d6ff;
+          color: #021320;
+      }
     </style>
     <link href="./theme/css/bootstrap-responsive.min.css" rel="stylesheet">
         <link href="./theme/css/font-awesome.css" rel="stylesheet">
@@ -76,6 +80,11 @@
             <ul class="nav">
                                                                     <li class="divider-vertical"></li>
                                               <li >
+                    <a href="./category/about.html">
+						<i class="icon-folder-open icon-large"></i>about
+					</a>
+                  </li>
+                                <li >
                     <a href="./category/post.html">
 						<i class="icon-folder-open icon-large"></i>post
 					</a>
@@ -98,23 +107,23 @@
             <ul>
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 <li class="tag-1">
-	<a href="./tag/dependency-injection.html">
-		<i class="icon-tag icon-large"></i>dependency injection
-	</a>
-</li>
-<li class="tag-4">
-	<a href="./tag/misc.html">
-		<i class="icon-tag icon-large"></i>misc
-	</a>
-</li>
-<li class="tag-1">
 	<a href="./tag/software-design.html">
 		<i class="icon-tag icon-large"></i>software design
 	</a>
 </li>
 <li class="tag-1">
+	<a href="./tag/dependency-injection.html">
+		<i class="icon-tag icon-large"></i>dependency injection
+	</a>
+</li>
+<li class="tag-1">
 	<a href="./tag/scala.html">
 		<i class="icon-tag icon-large"></i>scala
+	</a>
+</li>
+<li class="tag-1">
+	<a href="./tag/misc.html">
+		<i class="icon-tag icon-large"></i>misc
 	</a>
 </li>
 </ul>
@@ -150,6 +159,9 @@
             <li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
             <ul>
                                 <li>
+                    <i class="icon-folder-open icon-large"></i><a href="./category/about.html">about</a>
+                </li>
+                                <li>
                     <i class="icon-folder-open icon-large"></i><a href="./category/post.html">post</a>
                 </li>
                             </ul>
@@ -160,51 +172,22 @@
             <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
             <ul>
                                 <li class="tag-1">
-                    <a href="./tag/dependency-injection.html">dependency injection</a>
-                </li>
-                                <li class="tag-4">
-                    <a href="./tag/misc.html">misc</a>
-                </li>
-                                <li class="tag-1">
                     <a href="./tag/software-design.html">software design</a>
                 </li>
                                 <li class="tag-1">
+                    <a href="./tag/dependency-injection.html">dependency injection</a>
+                </li>
+                                <li class="tag-1">
                     <a href="./tag/scala.html">scala</a>
+                </li>
+                                <li class="tag-1">
+                    <a href="./tag/misc.html">misc</a>
                 </li>
                             </ul>
         </div>
 
         <div class="well">
-        <li class="nav-header"><h4><i class="icon-twitter-sign"></i>Twitter</h4></li>
-<script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
-<script>
-new TWTR.Widget({
-  version: 2,
-  type: 'profile',
-  rpp: 4,
-  interval: 30000,
-  width: 'auto',
-  height: 300,
-  theme: {
-	shell: {
-	  background: '#f5f5f5',
-	  color: '#000000'
-	},
-	tweets: {
-	  background: '#ffffff',
-	  color: '#000000',
-	  links: '#1a50a1'
-	}
-  },
-  features: {
-	scrollbar: false,
-	loop: false,
-	live: false,
-	behavior: 'all'
-  }
-}).render().setUser('rintcius').start();
-</script>
-        </div>
+                </div>
         
             </ul>
 
@@ -220,16 +203,7 @@ new TWTR.Widget({
     </div><!--/.fluid-container-->
 
 
-            <script type="text/javascript">
-    var disqus_shortname = 'rintcius';
-    (function () {
-        var s = document.createElement('script'); s.async = true;
-        s.type = 'text/javascript';
-        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
-        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-    }());
-</script>
-
+            
     <!-- Le javascript -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="./theme/js/jquery-1.7.2.min.js"></script>

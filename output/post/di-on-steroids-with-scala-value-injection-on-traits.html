@@ -40,6 +40,10 @@
       #content {
           padding-top: 70px;
       }
+      #about-me {
+          background-color: #a0d6ff;
+          color: #021320;
+      }
     </style>
     <link href="../theme/css/bootstrap-responsive.min.css" rel="stylesheet">
         <link href="../theme/css/font-awesome.css" rel="stylesheet">
@@ -75,7 +79,12 @@
           <div class="nav-collapse">
             <ul class="nav">
                                                                     <li class="divider-vertical"></li>
-                                              <li class="active">
+                                              <li >
+                    <a href="../category/about.html">
+						<i class="icon-folder-open icon-large"></i>about
+					</a>
+                  </li>
+                                <li class="active">
                     <a href="../category/post.html">
 						<i class="icon-folder-open icon-large"></i>post
 					</a>
@@ -105,186 +114,235 @@
                                         title="Permalink to DI on steroids with Scala : Value injection on traits">
                                         DI on steroids with Scala : Value injection on traits
                                 </a>
-                                <a href="http://twitter.com/share" class="twitter-share-button"
-   data-count="horizontal" data-via="rintcius">Tweet</a>
-<script type="text/javascript" src="http://platform.twitter.com/widgets.js">
-</script>
-                        </h1>
+                                                        </h1>
                     </div>
                 </header>
                 <div class="entry-content">
-                <h2>Introduction</h2>
+                <div class="section" id="introduction">
+<h2>Introduction</h2>
 <p>This text presents the concept and characteristics of <strong>value injection on traits</strong> which is a Dependency Injection (DI)
 variant in Scala which I have been using lately instead of the
-<a href="http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/">cake pattern</a> and the
-<a href="http://www.martinfowler.com/articles/injection.html">DI variants that Martin Fowler introduced</a>.</p>
+<a class="reference external" href="http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/">cake pattern</a> and the
+<a class="reference external" href="http://www.martinfowler.com/articles/injection.html">DI variants that Martin Fowler introduced</a>.</p>
 <p>I hope to clarify the elegance of this pattern and why it works so well with Scala, both for structuring the code and doing the wiring.</p>
 <p>The cake pattern has worked for me in the past, but on larger codebases I am encountering issues with it.
-I am not going into the details of these issues here, 
-but if you are interested Adam Warski has a <a href="http://www.warski.org/blog/2011/04/di-in-scala-cake-pattern-pros-cons/">nice post</a> on this,
+I am not going into the details of these issues here,
+but if you are interested Adam Warski has a <a class="reference external" href="http://www.warski.org/blog/2011/04/di-in-scala-cake-pattern-pros-cons/">nice post</a> on this,
 which matches well with my experiences.
 Instead, I wanted to keep this text fairly minimal and focus on introducing the idea of <strong>value injection on traits</strong>.</p>
 <p>Before starting off, note that DI has 2 parts:</p>
-<ul>
+<ul class="simple">
 <li><strong>wirability</strong> (or - to stay closer to the term DI - injectability) - this part has become the meta-pattern of OO programming.
-  I now think of it as almost synonymous with <em>good software design</em>, or at least a necessary precondition for a good design.
-  In this text I will refer to this code as <strong>wirable code</strong>.</li>
+I now think of it as almost synonymous with <em>good software design</em>, or at least a necessary precondition for a good design.
+In this text I will refer to this code as <strong>wirable code</strong>.</li>
 <li><strong>wiring</strong> (or - you got it, doesn't sound nice, but unfortunately reality demands it - injecting) -
-  in Java the wiring is typically done with a DI container/framework such as Spring or Guice, but that's just an option: 
-  the good software design meta-pattern comes with freedom of choice.
-  I will take advantage of this freedom and use Scala for writing <strong>wiring code</strong> (and wiring actually becomes fun!).</li>
+in Java the wiring is typically done with a DI container/framework such as Spring or Guice, but that's just an option:
+the good software design meta-pattern comes with freedom of choice.
+I will take advantage of this freedom and use Scala for writing <strong>wiring code</strong> (and wiring actually becomes fun!).</li>
 </ul>
 <p>I will start with a short introduction of the pattern using a simple example.
 This is just meant to give some basic intuition on the pattern.
 In the two sections after that, I will give a more in depth presentation of the wirable and wiring code respectively, while also giving some more realistic examples.
 And I will end with the conclusions.</p>
+</div>
+<div class="section" id="value-injection-on-traits">
 <h2>Value injection on traits</h2>
-<p>The name of the pattern "Value injection on traits" is analogous to the terminology that Martin Fowler introduced.
+<p>The name of the pattern &quot;Value injection on traits&quot; is analogous to the terminology that Martin Fowler introduced.
 I have added <em>on traits</em> to <em>value injection</em> to make the contrast with classes explicit.
 You <em>can</em> do value injection on classes, but that looks a lot like the constructor injection pattern that we already know.</p>
-<p>This is how the "Value injection on traits" pattern looks like, using the movie example of Fowler
-(or if you prefer the <a href="../post/di-in-scala-warmer-example-using-value-injection.html">Warmer example that Jonas Boner introduced</a>):</p>
-<div class="codehilite"><pre>  trait MovieFinder {
-    def findAll:Seq[Movie]
-  }
+<p>This is how the &quot;Value injection on traits&quot; pattern looks like, using the movie example of Fowler
+(or if you prefer the <a class="reference external" href="../post/di-in-scala-warmer-example-using-value-injection.html">Warmer example that Jonas Boner introduced</a>):</p>
+<div class="highlight"><pre>trait MovieFinder {
+  def findAll:Seq[Movie]
+}
 
-  // this is the trait where it is all about i.e. the reason that the pattern is called value injection on *traits*
-  trait MovieLister {
-    //the important *value* in the pattern with &#39;finder&#39; being the *injectable*
-    val finder: MovieFinder
+// this is the trait where it is all about i.e. the reason that the pattern is called value injection on *traits*
+trait MovieLister {
+  //the important *value* in the pattern with &#39;finder&#39; being the *injectable*
+  val finder: MovieFinder
 
-    def listAll: Unit = println(finder.findAll.mkString(&quot;/n&quot;))
-  }
+  def listAll: Unit = println(finder.findAll.mkString(&quot;/n&quot;))
+}
 
-  class ColonMovieFinder(filename: String) extends MovieFinder {
-    override def findAll:Seq[Movie] = ??? //left as exercise for the bored reader
-  }
+class ColonMovieFinder(filename: String) extends MovieFinder {
+  override def findAll:Seq[Movie] = ??? //left as exercise for the bored reader
+}
 </pre></div>
-
-
-<p>Although contrived in this simple example, the key is that <code>MovieLister</code> can be a <strong><code>trait</code></strong> (apart from a <code>class</code>) while
-nicely <strong>separating concerns</strong> by using a <code>val</code> to access the functionality of <code>MovieFinder</code>.
-The next section will show more interesting characteristics of the wirable code.</p>
+<p>Although contrived in this simple example, the key is that <code>MovieLister</code> can be a <strong>trait</strong> (apart from a <code>class</code>) while
+nicely <strong>separating concerns</strong> by using a <code>val</code> to access the functionality of <code>MovieFinder</code>.</p>
+<p><strong>Note</strong> (thanks Naftoli for your comment):
+when used in e.g. the cake pattern, abstract values are usually a source of <code>NullPointerException</code>'s and you will
+have to workaround it by using <code>lazy val</code>'s (and even then it can get tricky).
+This happens since you don't have any control over when a <code>val</code> is instantiated.
+When you use this pattern though, since the concerns are separated, you <em>can</em> control it and you don't have
+to worry about <code>NullPointerException</code>'s and resort to <code>lazy val</code>'s.</p>
+<p>The next section will show more interesting characteristics of the wirable code.</p>
 <p>The wiring code can then be as simple as this (so simple that you can hardly call it wiring):</p>
-<div class="codehilite"><pre><span class="n">val</span> <span class="n">myLister</span> <span class="o">=</span> <span class="n">new</span> <span class="n">MovieLister</span> <span class="p">{</span>
-  <span class="n">finder</span> <span class="o">=</span> <span class="n">new</span> <span class="n">ColonMovieFinder</span><span class="p">(</span><span class="s">&quot;someFile.txt&quot;</span><span class="p">)</span>
-<span class="p">}</span>
+<div class="highlight"><pre>val myLister = new MovieLister {
+  finder = new ColonMovieFinder(&quot;someFile.txt&quot;)
+}
 </pre></div>
-
-
 <p>The section <em>structure of wiring code</em> has an example that shows the general structure.</p>
+</div>
+<div class="section" id="structure-of-wirable-code">
 <h2>Structure of wirable code</h2>
 <p>The wirable code of the <code>MovieLister</code> example was just enough to explain the pattern and its name.
 What is less clear from that example is that there is an interesting recursive pattern behind this form of DI (which makes DI 'go round').</p>
 <p>This <strong>recursive pattern</strong> typically has this form:</p>
 <ul>
-<li><strong>base trait</strong> - at its core usually a simple trait with a small number of (typically 1) <strong>abstract methods</strong></li>
-<li><strong>extension of base trait</strong> - at its core usually containing:<ul>
+<li><p class="first"><strong>base trait</strong> - at its core usually a simple trait with a small number of (typically 1) <strong>abstract methods</strong></p>
+</li>
+<li><dl class="first docutils">
+<dt><strong>extension of base trait</strong> - at its core usually containing:</dt>
+<dd><ul class="first last simple">
 <li>a small number of <strong>abstract injectable values</strong>; and</li>
 <li>an <strong>implementation of the abstract method</strong> that is defined in the base trait</li>
 </ul>
+</dd>
+</dl>
 </li>
 </ul>
 <p>What makes this structure <strong>recursive</strong> is that the types of the abstract injectable values are typically <strong>base traits</strong> again.</p>
-<p>Here's an annotated example from the <code>authentication</code> object of <a href="https://github.com/svc-io/io.svc.security">io.svc.security</a>
+<p>Here's an annotated example from the <code>authentication</code> object of <a class="reference external" href="https://github.com/svc-io/io.svc.security">io.svc.security</a>
 (which is a security framework that I have created and uses the pattern all-over):</p>
-<div class="codehilite"><pre>  // *base trait*
-  trait InputValidator[-I, +U, +F] {
-    // *abstract method*
-    def validateInput(in: I): Validation[F, U]
+<div class="highlight"><pre>// *base trait*
+trait InputValidator[-I, +U, +F] {
+  // *abstract method*
+  def validateInput(in: I): Validation[F, U]
+}
+
+// *extension of base trait*
+trait CredentialsInputValidator[In, Credentials, User, +F] extends InputValidator[In, User, F] {
+
+  // *abstract, injectable value(s); typed as a base trait*
+  val credentialsExtractor: CredentialsExtractor[In, Credentials, F]
+  val authService: AuthenticationService[Credentials, User, F]
+
+  // *definition of the method that was declared in base trait, using the abstract values*
+  override def validateInput(in: In): Validation[F, User] = {
+    credentialsExtractor.extractCredentials(in).fold(
+      failure = { f =&gt; Failure(f) },
+      success = { user =&gt; authService.authenticate(user) }
+    )
   }
-
-  // *extension of base trait*
-  trait CredentialsInputValidator[In, Credentials, User, +F] extends InputValidator[In, User, F] {
-
-    // *abstract, injectable value(s); typed as a base trait*
-    val credentialsExtractor: CredentialsExtractor[In, Credentials, F]
-    val authService: AuthenticationService[Credentials, User, F]
-
-    // *definition of the method that was declared in base trait, using the abstract values*
-    override def validateInput(in: In): Validation[F, User] = {
-      credentialsExtractor.extractCredentials(in).fold(
-        failure = { f =&gt; Failure(f) },
-        success = { user =&gt; authService.authenticate(user) }
-      )
-    }
-  }
+}
 </pre></div>
-
-
+</div>
+<div class="section" id="structure-of-wiring-code">
 <h2>Structure of wiring code</h2>
 <p>In essence, the wiring code comes down to building a <strong>tree</strong> -
 another <strong>recursive structure</strong> - which is constructed using the 'wirable' building blocks.</p>
-<p>I will show you how I have used it in <a href="https://github.com/svc-io/io.svc.security.play.demo">io.svc.security.play.demo</a> -
-a play2 demo app for <a href="https://github.com/svc-io/io.svc.security.play">io.svc.security.play</a>
-(<code>io.svc.security.play</code> is a play 2 binding of <code>io.svc.security</code>). </p>
+<p>I will show you how I have used it in <a class="reference external" href="https://github.com/svc-io/io.svc.security.play.demo">io.svc.security.play.demo</a> -
+a play2 demo app for <a class="reference external" href="https://github.com/svc-io/io.svc.security.play">io.svc.security.play</a>
+(<code>io.svc.security.play</code> is a play 2 binding of <code>io.svc.security</code>).</p>
 <p>Here's an extract:</p>
-<div class="codehilite"><pre><span class="n">trait</span> <span class="n">DemoBasicAuth</span><span class="p">[</span><span class="n">A</span><span class="p">]</span> <span class="n">extends</span> <span class="n">PlayAuth</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">DemoUser</span><span class="p">]</span> <span class="p">{</span>
-  <span class="n">val</span> <span class="n">inputValidator</span> <span class="o">=</span> <span class="n">new</span> <span class="n">CredentialsInputValidator</span><span class="p">[</span><span class="n">Request</span><span class="p">[</span><span class="n">A</span><span class="p">],</span> <span class="n">UsernamePasswordCredentials</span><span class="p">,</span>
-                                                     <span class="n">DemoUser</span><span class="p">,</span> <span class="n">AuthenticationFailure</span><span class="p">]</span> <span class="p">{</span>
-    <span class="n">val</span> <span class="n">credentialsExtractor</span> <span class="o">=</span> <span class="n">new</span> <span class="n">PlayBasicAuthenticationCredentialsExtractor</span><span class="p">[</span><span class="n">A</span><span class="p">]</span>
-    <span class="n">val</span> <span class="n">authService</span> <span class="o">=</span> <span class="n">demoSecurity</span><span class="p">.</span><span class="n">demoAuthService</span>
-  <span class="p">}</span>
-  <span class="n">val</span> <span class="n">authFailureHandler</span> <span class="o">=</span> <span class="n">playAuthentication</span><span class="p">.</span><span class="n">authFailureHandler</span><span class="p">[</span><span class="n">A</span><span class="p">](</span>
-                             <span class="n">demoSecurity</span><span class="p">.</span><span class="n">unauthorizedHtml</span><span class="p">.</span><span class="n">withHeaders</span><span class="p">((</span><span class="s">&quot;WWW-Authenticate&quot;</span><span class="p">,</span> <span class="s">&quot;Basic realm=</span><span class="se">\&quot;</span><span class="s">Demo</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="p">)))</span>
-<span class="p">}</span>
+<div class="highlight"><pre>trait DemoBasicAuth[A] extends PlayAuth[A, DemoUser] {
+  val inputValidator = new CredentialsInputValidator[Request[A], UsernamePasswordCredentials,
+                                                     DemoUser, AuthenticationFailure] {
+    val credentialsExtractor = new PlayBasicAuthenticationCredentialsExtractor[A]
+    val authService = demoSecurity.demoAuthService
+  }
+  val authFailureHandler = playAuthentication.authFailureHandler[A](
+                             demoSecurity.unauthorizedHtml.withHeaders((&quot;WWW-Authenticate&quot;, &quot;Basic realm=\&quot;Demo\&quot;&quot;)))
+}
 
-<span class="n">trait</span> <span class="n">DemoBasicAuthSecurity</span><span class="p">[</span><span class="n">A</span><span class="p">]</span> <span class="n">extends</span> <span class="n">PlaySecurity</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">DemoUser</span><span class="p">]</span> <span class="p">{</span>
-  <span class="n">val</span> <span class="n">auth</span> <span class="o">=</span> <span class="n">new</span> <span class="n">DemoBasicAuth</span><span class="p">[</span><span class="n">A</span><span class="p">]</span> <span class="p">{}</span>
-<span class="p">}</span>
+trait DemoBasicAuthSecurity[A] extends PlaySecurity[A, DemoUser] {
+  val auth = new DemoBasicAuth[A] {}
+}
 </pre></div>
-
-
 <p>So, in this way, wiring becomes like building a <strong>flexible tree</strong> using a syntax that nicely shows the <strong>structure of the tree</strong>.</p>
 <p>It's flexible in the sense that parts of the tree can be constructed <strong>inline</strong> (like the <code>inputValidator</code> in <code>DemoBasicAuth</code>),
 while it is just as easy to <strong>reuse</strong> definitions that are made elsewhere. For example:</p>
-<ul>
-<li>reusing a <code>val</code>: <code>val authService = demoSecurity.demoAuthService</code> </li>
+<ul class="simple">
+<li>reusing a <code>val</code>: <code>val authService = demoSecurity.demoAuthService</code></li>
 <li>applying a <code>def</code>: <code>val authFailureHandler</code> calls the generic function <code>playAuthentication.authFailureHandler</code> to instantiate a specific <code>AuthFailureHandler</code>).</li>
 <li>reusing a <code>trait</code>: <code>val auth = new DemoBasicAuth[A] {}</code></li>
 </ul>
 <p>It is also flexible in the sense that the structure of each subtree is determined by the <strong>choice of the extension of the base trait for that subtree</strong>.
-E.g. choosing <code>CredentialsInputValidator</code> as <code>inputValidator</code> implies that <code>credentialsExtractor</code>and <code>authService</code> need to be assigned on the next level,
+E.g. choosing <code>CredentialsInputValidator</code> as <code>inputValidator</code> implies that <code>credentialsExtractor</code> and <code>authService</code> need to be assigned on the next level,
 but any other <code>InputValidator</code> can take its place defining its own subtree structure,
 including a dummy <code>InputValidator</code> like this which defines <code>InputValidator</code>'s abstract method on the fly (atypical for the pattern) and has no <code>val</code>'s on the next level:</p>
-<div class="codehilite"><pre><span class="n">val</span> <span class="n">inputValidator</span> <span class="o">=</span> <span class="n">new</span> <span class="n">InputValidator</span><span class="p">[</span><span class="n">Request</span><span class="p">[</span><span class="n">A</span><span class="p">],</span> <span class="n">DemoUser</span><span class="p">,</span> <span class="n">AuthenticationFailure</span><span class="p">]</span> <span class="p">{</span>
-  <span class="n">def</span> <span class="n">validateInput</span><span class="p">(</span><span class="n">in</span><span class="o">:</span> <span class="n">Request</span><span class="p">[</span><span class="n">A</span><span class="p">])</span> <span class="o">=</span> <span class="n">Success</span><span class="p">(</span><span class="n">DemoUser</span><span class="p">(</span><span class="s">&quot;joe&quot;</span><span class="p">,</span> <span class="s">&quot;password4joe&quot;</span><span class="p">))</span>
-<span class="p">}</span>
+<div class="highlight"><pre>val inputValidator = new InputValidator[Request[A], DemoUser, AuthenticationFailure] {
+  def validateInput(in: Request[A]) = Success(DemoUser(&quot;joe&quot;, &quot;password4joe&quot;))
+}
 </pre></div>
-
-
 <p>In the former example I have chosen to reuse <code>DemoBasicAuth</code> and <code>demoSecurity.demoAuthService</code>.
 But is also interesting to inline them and see how a larger tree looks like:</p>
-<div class="codehilite"><pre><span class="n">trait</span> <span class="n">DemoBasicAuthSecurity</span><span class="p">[</span><span class="n">A</span><span class="p">]</span> <span class="n">extends</span> <span class="n">PlaySecurity</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">DemoUser</span><span class="p">]</span> <span class="p">{</span>
-  <span class="n">val</span> <span class="n">auth</span> <span class="o">=</span> <span class="n">new</span> <span class="n">PlayAuth</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">DemoUser</span><span class="p">]</span> <span class="p">{</span>
-    <span class="n">val</span> <span class="n">inputValidator</span> <span class="o">=</span> <span class="n">new</span> <span class="n">CredentialsInputValidator</span><span class="p">[</span><span class="n">Request</span><span class="p">[</span><span class="n">A</span><span class="p">],</span> <span class="n">UsernamePasswordCredentials</span><span class="p">,</span>
-                                                       <span class="n">DemoUser</span><span class="p">,</span> <span class="n">AuthenticationFailure</span><span class="p">]</span> <span class="p">{</span>
-      <span class="n">val</span> <span class="n">credentialsExtractor</span> <span class="o">=</span> <span class="n">new</span> <span class="n">PlayBasicAuthenticationCredentialsExtractor</span><span class="p">[</span><span class="n">A</span><span class="p">]</span>
-      <span class="n">val</span> <span class="n">authService</span> <span class="o">=</span> <span class="n">new</span> <span class="n">UsernamePasswordCredentialsAuthenticationService</span><span class="p">[</span><span class="n">DemoUser</span><span class="p">]</span> <span class="p">{</span>
-        <span class="n">val</span> <span class="n">userService</span> <span class="o">=</span> <span class="n">demoSecurity</span><span class="p">.</span><span class="n">demoUserService</span>
-        <span class="n">val</span> <span class="n">credentialsValidator</span> <span class="o">=</span> <span class="n">demoSecurity</span><span class="p">.</span><span class="n">demoCredentialsValidator</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="n">val</span> <span class="n">authFailureHandler</span> <span class="o">=</span> <span class="n">playAuthentication</span><span class="p">.</span><span class="n">authFailureHandler</span><span class="p">[</span><span class="n">A</span><span class="p">](</span>
-                              <span class="n">demoSecurity</span><span class="p">.</span><span class="n">unauthorizedHtml</span><span class="p">.</span><span class="n">withHeaders</span><span class="p">((</span><span class="s">&quot;WWW-Authenticate&quot;</span><span class="p">,</span> <span class="s">&quot;Basic realm=</span><span class="se">\&quot;</span><span class="s">Demo</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="p">)))</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight"><pre>trait DemoBasicAuthSecurity[A] extends PlaySecurity[A, DemoUser] {
+  val auth = new PlayAuth[A, DemoUser] {
+    val inputValidator = new CredentialsInputValidator[Request[A], UsernamePasswordCredentials,
+                                                       DemoUser, AuthenticationFailure] {
+      val credentialsExtractor = new PlayBasicAuthenticationCredentialsExtractor[A]
+      val authService = new UsernamePasswordCredentialsAuthenticationService[DemoUser] {
+        val userService = demoSecurity.demoUserService
+        val credentialsValidator = demoSecurity.demoCredentialsValidator
+      }
+    }
+    val authFailureHandler = playAuthentication.authFailureHandler[A](
+                              demoSecurity.unauthorizedHtml.withHeaders((&quot;WWW-Authenticate&quot;, &quot;Basic realm=\&quot;Demo\&quot;&quot;)))
+  }
+}
 </pre></div>
-
-
-<h1>Conclusion</h1>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion</h2>
 <p>This pattern certainly changed <em>my</em> way of programming in Scala. There are a couple of things I like about it.</p>
 <p>One is that it <strong>maps great to the core DI concepts</strong> that I already know (and are good in my eyes), which makes the code <strong>intuitive to write and read</strong>.</p>
 <p>It is also concise in the sense that both the wirable and the wiring code are <strong>free of biolerplate</strong>.
 E.g. you don't have to make any alterations or additions to the code just for the sake of making the code properly wirable
-(as opposed to the cake pattern e.g. where the code is wrapped in a Component among others).</p>
+(as opposed to the cake pattern e.g. where the code is wrapped in a Component and you have to use <code>lazy val</code>'s among others).</p>
 <p>Another thing I like is the way it takes advantage of the Scala language, e.g. the fact that the pattern also <strong>works on traits</strong>.
 This makes applying DI very powerful and flexible.</p>
 <p>Also the <strong>wiring code</strong> is able to take full advantage of the Scala language: <strong>no DI container/framework/library is required</strong>,
 and its <strong>building blocks can be reused in a powerful, minimalistic (Scalaistic) way</strong>.
 And finally I like how the <strong>structure of the wiring</strong> is immediately visible.</p>
-<p>I hope it will be of value to you too. 
+<p>I hope it will be of value to you too.
 Suggestions, ideas and thoughts are welcome!</p>
+</div>
+<div class="well section" id="about-me">
+<h2>About me</h2>
+<p>This is one of the interesting things that I learned on my software development ride,
+which started last year after quitting my job in Amsterdam and migrating from the Netherlands to Edinburgh, Scotland.</p>
+<p>I took this move as an opportunity to focus full-time on developing myself in the direction of my fascinations &amp; passions (believe driven development ;)).
+Programming languages is one of my passions and learning more Scala was (and is) one of my goals.</p>
+<p>I took <a class="reference external" href="https://webservices.io">webservices.io</a> as the vehicle of the ride and - apart from learning more Scala -
+here is what I made, in order of coolness (by my definition of coolness, that is):</p>
+<ol class="arabic simple">
+<li><strong>Backend</strong> of webservices.io (using Scala with Play2): pluggable service architecture, e.g. the services can be nicely composed.
+Still lots of ideas here (keep you posted).</li>
+<li>In the <strong>DevOps</strong> area (using Python):
+flexible infrastructure architecture that enables to quickly switch cloud providers or move to a non-cloud setup.
+Also gained more experience with multiple cloud services (mainly AWS on IAAS level, but also several PAAS solutions);</li>
+<li><strong>Website</strong> (using Play2 and twitter bootstrap): this, among others, resulted in the first webdesign of which I am not unproud.</li>
+</ol>
+<p>I will soon be reaching the point where I cannot work full-time/speed on <a class="reference external" href="https://webservices.io">webservices.io</a> anymore,
+although I will certainly work further on it - with a lower speed - in my spare time.
+Also I am open for &amp; interested in ideas to keep this project going at various levels of speed.</p>
+<p>Anyway, this has been a great experience.</p>
+<p>In the future I would really like to continue working in this area - with <em>this area</em> being loosely defined as:</p>
+<ul class="simple">
+<li><strong>Software development and architecture</strong> - I have mostly been working in the role of software developer and architect,
+but I also enjoy working on other parts of the software lifecycle
+ranging from brainstorming new ideas and analyzing requirements to testing.</li>
+<li><strong>JVM platform</strong> - My favorite platform. I have experience with the following languages:<ul>
+<li><strong>Scala</strong> - I think Scala has a great future ahead with powers that go way beyond Java</li>
+<li><strong>Java</strong> - I have been working with Java for more than 10 years; still interested in Java projects</li>
+<li><strong>Groovy</strong> - I have worked on some Groovy/Grails projects in the past and found it also a pleasure to work with</li>
+</ul>
+</li>
+<li><strong>Cloud computing</strong><ul>
+<li>Development and architecture for cloud-based applications</li>
+<li>Migrating applications and services to the cloud</li>
+<li>DevOps work</li>
+</ul>
+</li>
+<li><strong>Environment</strong> - I feel at home in agile environment with e.g. start ups,
+but also with enterprises as long as there is a culture of looking forward and to <em>improve</em> software.</li>
+</ul>
+<p>If I can be of help to you in one of these areas,
+please get in touch via <a class="reference external" href="http://twitter.com/rintcius">twitter</a> or <span class="raw-role"><span><script language="JavaScript"> var name = "rintcius"; var domain = "gmai" + "l.c" + "om"; document.write('<a href="mai' + 'lto:' + name + '@' + domain + '">'); document.write('email' + '</a>');  </script> </span></span>.</p>
+</div>
+
                     <div class="well">
                             <footer class="post-info">
 <span class="label">Date</span>
@@ -303,20 +361,6 @@ Suggestions, ideas and thoughts are welcome!</p>
     <i class="icon-tag"></i><a href="../tag/dependency-injection.html">dependency injection</a>
 </footer><!-- /.post-info -->                    </div>
                 </div><!-- /.entry-content -->
-                                <div class="comments">
-                <h2>Comments</h2>
-                        <div id="disqus_thread"></div>
-                        <script type="text/javascript">
-                           var disqus_identifier = "post/di-on-steroids-with-scala-value-injection-on-traits.html";
-                           (function() {
-                                var dsq = document.createElement('script');
-                                dsq.type = 'text/javascript'; dsq.async = true;
-                                dsq.src = 'http://rintcius.disqus.com/embed.js';
-                                (document.getElementsByTagName('head')[0] ||
-                                 document.getElementsByTagName('body')[0]).appendChild(dsq);
-                          })();
-                        </script>
-                </div>
                         </article>
 </section>
         </div><!--/span-->
@@ -351,6 +395,9 @@ Suggestions, ideas and thoughts are welcome!</p>
             <li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
             <ul>
                                 <li>
+                    <i class="icon-folder-open icon-large"></i><a href="../category/about.html">about</a>
+                </li>
+                                <li>
                     <i class="icon-folder-open icon-large"></i><a href="../category/post.html">post</a>
                 </li>
                             </ul>
@@ -361,51 +408,22 @@ Suggestions, ideas and thoughts are welcome!</p>
             <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
             <ul>
                                 <li class="tag-1">
-                    <a href="../tag/dependency-injection.html">dependency injection</a>
-                </li>
-                                <li class="tag-4">
-                    <a href="../tag/misc.html">misc</a>
-                </li>
-                                <li class="tag-1">
                     <a href="../tag/software-design.html">software design</a>
                 </li>
                                 <li class="tag-1">
+                    <a href="../tag/dependency-injection.html">dependency injection</a>
+                </li>
+                                <li class="tag-1">
                     <a href="../tag/scala.html">scala</a>
+                </li>
+                                <li class="tag-1">
+                    <a href="../tag/misc.html">misc</a>
                 </li>
                             </ul>
         </div>
 
         <div class="well">
-        <li class="nav-header"><h4><i class="icon-twitter-sign"></i>Twitter</h4></li>
-<script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
-<script>
-new TWTR.Widget({
-  version: 2,
-  type: 'profile',
-  rpp: 4,
-  interval: 30000,
-  width: 'auto',
-  height: 300,
-  theme: {
-	shell: {
-	  background: '#f5f5f5',
-	  color: '#000000'
-	},
-	tweets: {
-	  background: '#ffffff',
-	  color: '#000000',
-	  links: '#1a50a1'
-	}
-  },
-  features: {
-	scrollbar: false,
-	loop: false,
-	live: false,
-	behavior: 'all'
-  }
-}).render().setUser('rintcius').start();
-</script>
-        </div>
+                </div>
         
             </ul>
 
@@ -421,16 +439,7 @@ new TWTR.Widget({
     </div><!--/.fluid-container-->
 
 
-            <script type="text/javascript">
-    var disqus_shortname = 'rintcius';
-    (function () {
-        var s = document.createElement('script'); s.async = true;
-        s.type = 'text/javascript';
-        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
-        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-    }());
-</script>
-
+            
     <!-- Le javascript -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="../theme/js/jquery-1.7.2.min.js"></script>

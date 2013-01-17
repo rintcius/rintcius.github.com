@@ -40,6 +40,10 @@
       #content {
           padding-top: 70px;
       }
+      #about-me {
+          background-color: #a0d6ff;
+          color: #021320;
+      }
     </style>
     <link href="./theme/css/bootstrap-responsive.min.css" rel="stylesheet">
         <link href="./theme/css/font-awesome.css" rel="stylesheet">
@@ -76,6 +80,11 @@
             <ul class="nav">
                                                                     <li class="divider-vertical"></li>
                                               <li >
+                    <a href="./category/about.html">
+						<i class="icon-folder-open icon-large"></i>about
+					</a>
+                  </li>
+                                <li >
                     <a href="./category/post.html">
 						<i class="icon-folder-open icon-large"></i>post
 					</a>
@@ -125,12 +134,13 @@ using <a href="./post/di-on-steroids-with-scala-value-injection-on-traits.html">
             <div class="page-header">
                 <h1><a href="./post/di-on-steroids-with-scala-value-injection-on-traits.html">DI on steroids with Scala : Value injection on traits</a></h1>
             </div>
-                <div class="summary"><h2>Introduction</h2>
+                <div class="summary"><div class="section" id="introduction">
+<h2>Introduction</h2>
 <p>This text presents the concept and characteristics of <strong>value injection on traits</strong> which is a Dependency Injection (DI)
 variant in Scala which I have been using lately instead of the
-<a href="http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/">cake pattern</a> and the
-<a href="http://www.martinfowler.com/articles/injection.html">DI variants that Martin Fowler introduced</a>.</p>
-<p>I hope to clarify the elegance of this pattern ...</p>
+<a class="reference external" href="http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/">cake pattern</a> and the
+<a class="reference external" href="http://www.martinfowler.com/articles/injection.html">DI variants that Martin Fowler introduced</a>.</p>
+<p>I hope to clarify the elegance of this pattern ...</p></div>
                         <a class="btn btn-primary xsmall" href="./post/di-on-steroids-with-scala-value-injection-on-traits.html">more ...</a>
                 </div>
                 <div class="well small" style="margin: 20px 0"><footer class="post-info">
@@ -148,6 +158,32 @@ variant in Scala which I have been using lately instead of the
     <i class="icon-tag"></i><a href="./tag/scala.html">scala</a>
     <i class="icon-tag"></i><a href="./tag/software-design.html">software design</a>
     <i class="icon-tag"></i><a href="./tag/dependency-injection.html">dependency injection</a>
+</footer><!-- /.post-info --></div>
+        </div>
+                <div class="article">
+            <div class="page-header">
+                <h1><a href="./about.html">About me</a></h1>
+            </div>
+                <div class="summary"><h1>About me</h1>
+<p>This is one of the interesting things that I learned on my software development ride,
+which started last year after migrating from the Netherlands (Amsterdam) to Edinburgh, Scotland
+and quitting my job in Amsterdam.</p>
+<p>I took this move as an opportunity to focus full-time on developing myself in ...</p>
+                        <a class="btn btn-primary xsmall" href="./about.html">more ...</a>
+                </div>
+                <div class="well small" style="margin: 20px 0"><footer class="post-info">
+<span class="label">Date</span>
+<abbr class="published" title="2013-01-13T00:00:00">
+        <i class="icon-calendar"></i>Sun 13 January 2013
+</abbr>
+<span class="label">By</span>
+<i class="icon-user"></i><a href="./author/rintcius-blok.html">Rintcius Blok</a>
+<span class="label">Category</span>
+<i class="icon-folder-open"></i><a href="./category/about.html">about</a>
+
+
+<span class="label">Tags</span>
+    <i class="icon-tag"></i><a href="./tag/misc.html">misc</a>
 </footer><!-- /.post-info --></div>
         </div>
                 <div class="article">
@@ -208,6 +244,9 @@ So writing has become ...</p>
             <li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
             <ul>
                                 <li>
+                    <i class="icon-folder-open icon-large"></i><a href="./category/about.html">about</a>
+                </li>
+                                <li>
                     <i class="icon-folder-open icon-large"></i><a href="./category/post.html">post</a>
                 </li>
                             </ul>
@@ -218,51 +257,22 @@ So writing has become ...</p>
             <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
             <ul>
                                 <li class="tag-1">
-                    <a href="./tag/dependency-injection.html">dependency injection</a>
-                </li>
-                                <li class="tag-4">
-                    <a href="./tag/misc.html">misc</a>
-                </li>
-                                <li class="tag-1">
                     <a href="./tag/software-design.html">software design</a>
                 </li>
                                 <li class="tag-1">
+                    <a href="./tag/dependency-injection.html">dependency injection</a>
+                </li>
+                                <li class="tag-1">
                     <a href="./tag/scala.html">scala</a>
+                </li>
+                                <li class="tag-1">
+                    <a href="./tag/misc.html">misc</a>
                 </li>
                             </ul>
         </div>
 
         <div class="well">
-        <li class="nav-header"><h4><i class="icon-twitter-sign"></i>Twitter</h4></li>
-<script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
-<script>
-new TWTR.Widget({
-  version: 2,
-  type: 'profile',
-  rpp: 4,
-  interval: 30000,
-  width: 'auto',
-  height: 300,
-  theme: {
-	shell: {
-	  background: '#f5f5f5',
-	  color: '#000000'
-	},
-	tweets: {
-	  background: '#ffffff',
-	  color: '#000000',
-	  links: '#1a50a1'
-	}
-  },
-  features: {
-	scrollbar: false,
-	loop: false,
-	live: false,
-	behavior: 'all'
-  }
-}).render().setUser('rintcius').start();
-</script>
-        </div>
+                </div>
         
             </ul>
 
@@ -278,16 +288,7 @@ new TWTR.Widget({
     </div><!--/.fluid-container-->
 
 
-            <script type="text/javascript">
-    var disqus_shortname = 'rintcius';
-    (function () {
-        var s = document.createElement('script'); s.async = true;
-        s.type = 'text/javascript';
-        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
-        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-    }());
-</script>
-
+            
     <!-- Le javascript -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="./theme/js/jquery-1.7.2.min.js"></script>
