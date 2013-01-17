@@ -32,8 +32,5 @@ ARTICLE_SAVE_AS = '{slug}.html'
 ARTICLE_LANG_URL = '{slug}-{lang}.html'
 ARTICLE_LANG_SAVE_AS = '{slug}-{lang}.html'
 
-DISQUS_SITENAME = 'rintcius'
-TWITTER_USERNAME = 'rintcius'
-
 from pelican.plugins import related_posts
 PLUGINS = [related_posts]
