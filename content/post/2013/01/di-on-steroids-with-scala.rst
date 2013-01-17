@@ -44,7 +44,7 @@ You *can* do value injection on classes, but that looks a lot like the construct
 This is how the "Value injection on traits" pattern looks like, using the movie example of Fowler
 (or if you prefer the `Warmer example that Jonas Boner introduced <|filename|/post/2013/01/warmer-example-using-value-injection.md>`_):
 
-.. code-block:: scala
+.. code-block:: none
 
   trait MovieFinder {
     def findAll:Seq[Movie]
@@ -62,21 +62,21 @@ This is how the "Value injection on traits" pattern looks like, using the movie 
     override def findAll:Seq[Movie] = ??? //left as exercise for the bored reader
   }
 
-Although contrived in this simple example, the key is that ``MovieLister`` can be a **trait** (apart from a ``class``) while
-nicely **separating concerns** by using a ``val`` to access the functionality of ``MovieFinder``.
+Although contrived in this simple example, the key is that :code:`MovieLister` can be a **trait** (apart from a :code:`class`) while
+nicely **separating concerns** by using a :code:`val` to access the functionality of :code:`MovieFinder`.
 
 **Note** (thanks Naftoli for your comment):
-when used in e.g. the cake pattern, abstract values are usually a source of ``NullPointerException``'s and you will
-have to workaround it by using ``lazy val``'s (and even then it can get tricky).
-This happens since you don't have any control over when a ``val`` is instantiated.
+when used in e.g. the cake pattern, abstract values are usually a source of :code:`NullPointerException`'s and you will
+have to workaround it by using :code:`lazy val`'s (and even then it can get tricky).
+This happens since you don't have any control over when a :code:`val` is instantiated.
 When you use this pattern though, since the concerns are separated, you *can* control it and you don't have
-to worry about ``NullPointerException``'s and resort to ``lazy val``'s.
+to worry about :code:`NullPointerException`'s and resort to :code:`lazy val`'s.
 
 The next section will show more interesting characteristics of the wirable code.
 
 The wiring code can then be as simple as this (so simple that you can hardly call it wiring):
 
-.. code-block:: scala
+.. code-block:: none
 
   val myLister = new MovieLister {
     finder = new ColonMovieFinder("someFile.txt")
@@ -86,7 +86,7 @@ The section *structure of wiring code* has an example that shows the general str
 
 Structure of wirable code
 -------------------------
-The wirable code of the ``MovieLister`` example was just enough to explain the pattern and its name.
+The wirable code of the :code:`MovieLister` example was just enough to explain the pattern and its name.
 What is less clear from that example is that there is an interesting recursive pattern behind this form of DI (which makes DI 'go round').
 
 This **recursive pattern** typically has this form:
@@ -98,10 +98,10 @@ This **recursive pattern** typically has this form:
 
 What makes this structure **recursive** is that the types of the abstract injectable values are typically **base traits** again.
 
-Here's an annotated example from the ``authentication`` object of `io.svc.security <https://github.com/svc-io/io.svc.security>`_
+Here's an annotated example from the :code:`authentication` object of `io.svc.security <https://github.com/svc-io/io.svc.security>`_
 (which is a security framework that I have created and uses the pattern all-over):
 
-.. code-block:: scala
+.. code-block:: none
 
   // *base trait*
   trait InputValidator[-I, +U, +F] {
@@ -134,11 +134,11 @@ another **recursive structure** - which is constructed using the 'wirable' build
 
 I will show you how I have used it in `io.svc.security.play.demo <https://github.com/svc-io/io.svc.security.play.demo>`_ -
 a play2 demo app for `io.svc.security.play <https://github.com/svc-io/io.svc.security.play>`_
-(``io.svc.security.play`` is a play 2 binding of ``io.svc.security``).
+(:code:`io.svc.security.play` is a play 2 binding of :code:`io.svc.security`).
 
 Here's an extract:
 
-.. code-block:: scala
+.. code-block:: none
 
   trait DemoBasicAuth[A] extends PlayAuth[A, DemoUser] {
     val inputValidator = new CredentialsInputValidator[Request[A], UsernamePasswordCredentials,
@@ -157,28 +157,28 @@ Here's an extract:
 
 So, in this way, wiring becomes like building a **flexible tree** using a syntax that nicely shows the **structure of the tree**.
 
-It's flexible in the sense that parts of the tree can be constructed **inline** (like the ``inputValidator`` in ``DemoBasicAuth``),
+It's flexible in the sense that parts of the tree can be constructed **inline** (like the :code:`inputValidator` in :code:`DemoBasicAuth`),
 while it is just as easy to **reuse** definitions that are made elsewhere. For example:
 
-* reusing a ``val``: ``val authService = demoSecurity.demoAuthService``
-* applying a ``def``: ``val authFailureHandler`` calls the generic function ``playAuthentication.authFailureHandler`` to instantiate a specific ``AuthFailureHandler``).
-* reusing a ``trait``: ``val auth = new DemoBasicAuth[A] {}``
+* reusing a :code:`val`: :code:`val authService = demoSecurity.demoAuthService`
+* applying a :code:`def`: :code:`val authFailureHandler` calls the generic function :code:`playAuthentication.authFailureHandler` to instantiate a specific :code:`AuthFailureHandler`).
+* reusing a :code:`trait`: :code:`val auth = new DemoBasicAuth[A] {}`
 
 It is also flexible in the sense that the structure of each subtree is determined by the **choice of the extension of the base trait for that subtree**.
-E.g. choosing ``CredentialsInputValidator`` as ``inputValidator`` implies that ``credentialsExtractor`` and ``authService`` need to be assigned on the next level,
-but any other ``InputValidator`` can take its place defining its own subtree structure,
-including a dummy ``InputValidator`` like this which defines ``InputValidator``'s abstract method on the fly (atypical for the pattern) and has no ``val``'s on the next level:
+E.g. choosing :code:`CredentialsInputValidator` as :code:`inputValidator` implies that :code:`credentialsExtractor` and :code:`authService` need to be assigned on the next level,
+but any other :code:`InputValidator` can take its place defining its own subtree structure,
+including a dummy :code:`InputValidator` like this which defines :code:`InputValidator`'s abstract method on the fly (atypical for the pattern) and has no :code:`val`'s on the next level:
 
-.. code-block:: scala
+.. code-block:: none
 
   val inputValidator = new InputValidator[Request[A], DemoUser, AuthenticationFailure] {
     def validateInput(in: Request[A]) = Success(DemoUser("joe", "password4joe"))
   }
 
-In the former example I have chosen to reuse ``DemoBasicAuth`` and ``demoSecurity.demoAuthService``.
+In the former example I have chosen to reuse :code:`DemoBasicAuth` and :code:`demoSecurity.demoAuthService`.
 But is also interesting to inline them and see how a larger tree looks like:
 
-.. code-block:: scala
+.. code-block:: none
 
   trait DemoBasicAuthSecurity[A] extends PlaySecurity[A, DemoUser] {
     val auth = new PlayAuth[A, DemoUser] {
@@ -203,7 +203,7 @@ One is that it **maps great to the core DI concepts** that I already know (and a
 
 It is also concise in the sense that both the wirable and the wiring code are **free of biolerplate**.
 E.g. you don't have to make any alterations or additions to the code just for the sake of making the code properly wirable
-(as opposed to the cake pattern e.g. where the code is wrapped in a Component and you have to use ``lazy val``'s among others).
+(as opposed to the cake pattern e.g. where the code is wrapped in a Component and you have to use :code:`lazy val`'s among others).
 
 Another thing I like is the way it takes advantage of the Scala language, e.g. the fact that the pattern also **works on traits**.
 This makes applying DI very powerful and flexible.
@@ -214,3 +214,57 @@ And finally I like how the **structure of the wiring** is immediately visible.
 
 I hope it will be of value to you too. 
 Suggestions, ideas and thoughts are welcome!
+
+.. class:: well
+
+About me
+--------
+
+This is one of the interesting things that I learned on my software development ride,
+which started last year after quitting my job in Amsterdam and migrating from the Netherlands to Edinburgh, Scotland.
+
+I took this move as an opportunity to focus full-time on developing myself in the direction of my fascinations & passions (believe driven development ;)).
+Programming languages is one of my passions and learning more Scala was (and is) one of my goals.
+
+I took `webservices.io <https://webservices.io>`_ as the vehicle of the ride and - apart from learning more Scala -
+here is what I made, in order of coolness (by my definition of coolness, that is):
+
+1. **Backend** of webservices.io (using Scala with Play2): pluggable service architecture, e.g. the services can be nicely composed.
+   Still lots of ideas here (keep you posted).
+2. In the **DevOps** area (using Python):
+   flexible infrastructure architecture that enables to quickly switch cloud providers or move to a non-cloud setup.
+   Also gained more experience with multiple cloud services (mainly AWS on IAAS level, but also several PAAS solutions);
+3. **Website** (using Play2 and twitter bootstrap): this, among others, resulted in the first webdesign of which I am not unproud.
+
+I will soon be reaching the point where I cannot work full-time/speed on `webservices.io <https://webservices.io>`_ anymore,
+although I will certainly work further on it - with a lower speed - in my spare time.
+Also I am open for & interested in ideas to keep this project going at various levels of speed.
+
+Anyway, this has been a great experience.
+
+In the future I would really like to continue working in this area - with *this area* being loosely defined as:
+
+* **Software development and architecture** - I have mostly been working in the role of software developer and architect,
+  but I also enjoy working on other parts of the software lifecycle
+  ranging from brainstorming new ideas and analyzing requirements to testing.
+
+* **JVM platform** - My favorite platform. I have experience with the following languages:
+
+  * **Scala** - I think Scala has a great future ahead with powers that go way beyond Java
+  * **Java** - I have been working with Java for more than 10 years; still interested in Java projects
+  * **Groovy** - I have worked on some Groovy/Grails projects in the past and found it also a pleasure to work with
+
+* **Cloud computing**
+
+  * Development and architecture for cloud-based applications
+  * Migrating applications and services to the cloud
+  * DevOps work
+
+* **Environment** - I feel at home in agile environment with e.g. start ups,
+  but also with enterprises as long as there is a culture of looking forward and to *improve* software.
+
+.. role:: raw-role(raw)
+   :format: html
+
+If I can be of help to you in one of these areas,
+please get in touch via `twitter <http://twitter.com/rintcius>`_ or :raw-role:`<span><script language="JavaScript"> var name = "rintcius"; var domain = "gmai" + "l.c" + "om"; document.write('<a href="mai' + 'lto:' + name + '@' + domain + '">'); document.write('email' + '</a>');  </script> </span>`.
