@@ -63,6 +63,13 @@ This is how the "Value injection on traits" pattern looks like, using the movie 
 
 Although contrived in this simple example, the key is that `MovieLister` can be a **`trait`** (apart from a `class`) while
 nicely **separating concerns** by using a `val` to access the functionality of `MovieFinder`.
+
+**Note** (thanks Naftoli for your comment):
+when used in e.g. the cake pattern, abstract values are usually a source of `NullPointerException`'s and you will
+have to workaround it by using `lazy val`'s. This happens since you don't have any control over when a `val` is
+instantiated. When you use this pattern though, since the concerns are separated, you *can* control it and you don't have
+to worry about `NullPointerException`'s and resort to `lazy val`'s.
+
 The next section will show more interesting characteristics of the wirable code.
 
 The wiring code can then be as simple as this (so simple that you can hardly call it wiring):
@@ -185,7 +192,7 @@ One is that it **maps great to the core DI concepts** that I already know (and a
 
 It is also concise in the sense that both the wirable and the wiring code are **free of biolerplate**.
 E.g. you don't have to make any alterations or additions to the code just for the sake of making the code properly wirable
-(as opposed to the cake pattern e.g. where the code is wrapped in a Component among others).
+(as opposed to the cake pattern e.g. where the code is wrapped in a Component and you have to use `lazy val`'s among others).
 
 Another thing I like is the way it takes advantage of the Scala language, e.g. the fact that the pattern also **works on traits**.
 This makes applying DI very powerful and flexible.
