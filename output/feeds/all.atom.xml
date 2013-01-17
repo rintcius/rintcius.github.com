@@ -225,48 +225,7 @@ but also with enterprises as long as there is a culture of looking forward and t
 &lt;p&gt;If I can be of help to you in one of these areas,
 please get in touch via &lt;a class="reference external" href="http://twitter.com/rintcius"&gt;twitter&lt;/a&gt; or &lt;span class="raw-role"&gt;&lt;span&gt;&lt;script language="JavaScript"&gt; var name = "rintcius"; var domain = "gmai" + "l.c" + "om"; document.write('&lt;a href="mai' + 'lto:' + name + '@' + domain + '"&gt;'); document.write('email' + '&lt;/a&gt;');  &lt;/script&gt; &lt;/span&gt;&lt;/span&gt;.&lt;/p&gt;
 &lt;/div&gt;
-</summary><category term="scala"></category><category term="software design"></category><category term="dependency injection"></category></entry><entry><title>About me</title><link href="/about.html" rel="alternate"></link><updated>2013-01-13T00:00:00+01:00</updated><author><name>Rintcius Blok</name></author><id>tag:,2013-01-13:about.html</id><summary type="html">&lt;h1&gt;About me&lt;/h1&gt;
-&lt;p&gt;This is one of the interesting things that I learned on my software development ride,
-which started last year after migrating from the Netherlands (Amsterdam) to Edinburgh, Scotland
-and quitting my job in Amsterdam.&lt;/p&gt;
-&lt;p&gt;I took this move as an opportunity to focus full-time on developing myself in the direction of my fascinations &amp;amp; passions (believe driven development ;)).
-Programming languages is one of my passions and learning more Scala was one of the goals I had.&lt;/p&gt;
-&lt;p&gt;I took &lt;a href="https://webservices.io"&gt;webservices.io&lt;/a&gt; as the vehicle of the ride and - apart from learning more Scala - here is what I made, in order of coolness (by my definition of coolness, that is):&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;strong&gt;Backend&lt;/strong&gt; of webservices.io (using Scala with Play2): pluggable service architecture, e.g. the services can be nicely composed.
-   Still lots of ideas here (keep you posted).&lt;/li&gt;
-&lt;li&gt;In the &lt;strong&gt;DevOps&lt;/strong&gt; area (using Python):
-   flexible infrastructure architecture that enables to quickly switch cloud providers or move to a non-cloud setup.
-   Also gained more experience with multiple cloud services (mainly AWS on IAAS level, but also several PAAS solutions);&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Website&lt;/strong&gt; (using Play2 and twitter bootstrap): this, among others, resulted in the first webdesign of which I am not unproud.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;I will soon be reaching the point where I cannot work full-time/speed on &lt;a href="https://webservices.io"&gt;webservices.io&lt;/a&gt; anymore,
-although I will certainly work further on it - with a lower speed - in my spare time.
-Also I am open for &amp;amp; interested in ideas to keep this project going at various levels of speed.&lt;/p&gt;
-&lt;p&gt;Anyway, this has been a great experience.&lt;/p&gt;
-&lt;p&gt;In the future I would really like to continue working in this area - with &lt;em&gt;this area&lt;/em&gt; being loosely defined as:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Scala - or also still interested in Groovy and Java, although it will be&lt;/li&gt;
-&lt;li&gt;Cloud computing&lt;ul&gt;
-&lt;li&gt;migrating applications and services to the cloud&lt;/li&gt;
-&lt;li&gt;xxx&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Environment: I feel at home with start ups, but also with enterprises as long as there is a culture of looking forward and
-  to &lt;em&gt;improve&lt;/em&gt; software.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;If I can be of help to you in one of these areas, and you think you can be of help to me too,
-please get in touch via &lt;a href="http://twitter.com/rintcius"&gt;twitter&lt;/a&gt; or email:
-&lt;span&gt;
-&lt;script language="JavaScript"&gt;
-&lt;!--
-var name = "rintcius";
-var domain = "gmai" + "l.c" + "om";
-document.write('&lt;a href="mai' + 'lto:' + name + '@' + domain + '"&gt;');
-document.write(name + '@' + domain + '&lt;/a&gt;');
-// --&gt;
-&lt;/script&gt;
-&lt;/span&gt;&lt;/p&gt;</summary><category term="misc"></category></entry><entry><title>New blog</title><link href="/post/new-blog.html" rel="alternate"></link><updated>2013-01-13T00:00:00+01:00</updated><author><name>Rintcius Blok</name></author><id>tag:,2013-01-13:post/new-blog.html</id><summary type="html">&lt;p&gt;This is the place of my new blog, moving away from Wordpress, and moving to &lt;a href="http://docs.getpelican.com/"&gt;Pelican&lt;/a&gt;.
+</summary><category term="scala"></category><category term="software design"></category><category term="dependency injection"></category></entry><entry><title>New blog</title><link href="/post/new-blog.html" rel="alternate"></link><updated>2013-01-13T00:00:00+01:00</updated><author><name>Rintcius Blok</name></author><id>tag:,2013-01-13:post/new-blog.html</id><summary type="html">&lt;p&gt;This is the place of my new blog, moving away from Wordpress, and moving to &lt;a href="http://docs.getpelican.com/"&gt;Pelican&lt;/a&gt;.
 Pelican is a static site generator written in Python which enables serving a site directly from Github.&lt;/p&gt;
 &lt;p&gt;Pelican makes writing a post as easy as pushing a file to Github.
 So writing has become more like programming, which increases the chances of me blogging more often ;)&lt;/p&gt;</summary><category term="misc"></category></entry></feed>
