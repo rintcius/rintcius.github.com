@@ -103,10 +103,7 @@ trait CredentialsInputValidator[In, Credentials, User, +F] extends InputValidato
 
   // *definition of the method that was declared in base trait, using the abstract values*
   override def validateInput(in: In): Validation[F, User] = {
-    credentialsExtractor.extractCredentials(in).fold(
-      failure = { f =&amp;gt; Failure(f) },
-      success = { user =&amp;gt; authService.authenticate(user) }
-    )
+    credentialsExtractor.extract(in) flatMap authenticationService.authenticate
   }
 }
 &lt;/pre&gt;&lt;/div&gt;
