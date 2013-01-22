@@ -118,7 +118,7 @@ Here's an annotated example from the :code:`authentication` object of `io.svc.se
 
     // *definition of the method that was declared in base trait, using the abstract values*
     override def validateInput(in: In): Validation[F, User] = {
-      credentialsExtractor.extract(in) flatMap authenticationService.authenticate
+      credentialsExtractor.extract(in) flatMap authService.authenticate
     }
   }
 
