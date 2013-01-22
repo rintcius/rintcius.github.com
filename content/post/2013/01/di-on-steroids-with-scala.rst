@@ -118,10 +118,7 @@ Here's an annotated example from the :code:`authentication` object of `io.svc.se
 
     // *definition of the method that was declared in base trait, using the abstract values*
     override def validateInput(in: In): Validation[F, User] = {
-      credentialsExtractor.extractCredentials(in).fold(
-        failure = { f => Failure(f) },
-        success = { user => authService.authenticate(user) }
-      )
+      credentialsExtractor.extract(in) flatMap authenticationService.authenticate
     }
   }
 
