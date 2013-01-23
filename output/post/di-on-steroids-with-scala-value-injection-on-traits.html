@@ -219,10 +219,7 @@ trait CredentialsInputValidator[In, Credentials, User, +F] extends InputValidato
 
   // *definition of the method that was declared in base trait, using the abstract values*
   override def validateInput(in: In): Validation[F, User] = {
-    credentialsExtractor.extractCredentials(in).fold(
-      failure = { f =&gt; Failure(f) },
-      success = { user =&gt; authService.authenticate(user) }
-    )
+    credentialsExtractor.extract(in) flatMap authService.authenticate
   }
 }
 </pre></div>
@@ -418,13 +415,13 @@ please get in touch via <a class="reference external" href="http://twitter.com/r
             <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
             <ul>
                                 <li class="tag-1">
-                    <a href="http://blog.rintcius.nl/tag/dependency-injection.html">dependency injection</a>
-                </li>
-                                <li class="tag-1">
                     <a href="http://blog.rintcius.nl/tag/software-design.html">software design</a>
                 </li>
                                 <li class="tag-1">
                     <a href="http://blog.rintcius.nl/tag/scala.html">scala</a>
+                </li>
+                                <li class="tag-1">
+                    <a href="http://blog.rintcius.nl/tag/dependency-injection.html">dependency injection</a>
                 </li>
                                 <li class="tag-4">
                     <a href="http://blog.rintcius.nl/tag/misc.html">misc</a>
