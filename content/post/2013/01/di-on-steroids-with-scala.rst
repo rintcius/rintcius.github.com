@@ -1,5 +1,5 @@
 Dependency Injection on steroids with Scala : Value injection on traits
-#####################################################
+#######################################################################
 :date: 2013-01-15
 :tags: scala, software design, dependency injection
 :category: post
