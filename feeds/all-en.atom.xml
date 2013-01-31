@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>Blok blogs</title><link href="http://blog.rintcius.nl/" rel="alternate"></link><link href="http://blog.rintcius.nl/feeds/all-en.atom.xml" rel="self"></link><id>http://blog.rintcius.nl/</id><updated>2013-01-15T00:00:00+01:00</updated><entry><title>DI in Scala: Warmer example using Value injection</title><link href="http://blog.rintcius.nl/post/di-in-scala-warmer-example-using-value-injection.html" rel="alternate"></link><updated>2013-01-15T00:00:00+01:00</updated><author><name>Rintcius Blok</name></author><id>tag:blog.rintcius.nl,2013-01-15:post/di-in-scala-warmer-example-using-value-injection.html</id><summary type="html">&lt;p&gt;Here is the Warmer example (which was introduced &lt;a href="http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/"&gt;here&lt;/a&gt;)
 using &lt;a href="http://blog.rintcius.nl/post/di-on-steroids-with-scala-value-injection-on-traits.html"&gt;value injection on traits&lt;/a&gt;:&lt;/p&gt;
-&lt;script src="https://gist.github.com/4538061.js"&gt;&lt;/script&gt;</summary><category term="scala"></category><category term="software design"></category><category term="dependency injection"></category></entry><entry><title>Dependency Injection on steroids with Scala : Value injection on traits</title><link href="http://blog.rintcius.nl/post/di-on-steroids-with-scala-value-injection-on-traits.html" rel="alternate"></link><updated>2013-01-15T00:00:00+01:00</updated><author><name>Rintcius Blok</name></author><id>tag:blog.rintcius.nl,2013-01-15:post/di-on-steroids-with-scala-value-injection-on-traits.html</id><summary type="html">&lt;div class="system-message"&gt;
-&lt;p class="system-message-title"&gt;System Message: WARNING/2 (&lt;tt class="docutils"&gt;/fast/dev/GITHUB/rintcius.github.com/content/post/2013/01/di-on-steroids-with-scala.rst&lt;/tt&gt;, line 2)&lt;/p&gt;
-&lt;p&gt;Title underline too short.&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-Dependency Injection on steroids with Scala : Value injection on traits
-#####################################################
-&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div class="section" id="introduction"&gt;
+&lt;script src="https://gist.github.com/4538061.js"&gt;&lt;/script&gt;</summary><category term="scala"></category><category term="software design"></category><category term="dependency injection"></category></entry><entry><title>Dependency Injection on steroids with Scala : Value injection on traits</title><link href="http://blog.rintcius.nl/post/di-on-steroids-with-scala-value-injection-on-traits.html" rel="alternate"></link><updated>2013-01-15T00:00:00+01:00</updated><author><name>Rintcius Blok</name></author><id>tag:blog.rintcius.nl,2013-01-15:post/di-on-steroids-with-scala-value-injection-on-traits.html</id><summary type="html">&lt;div class="section" id="introduction"&gt;
 &lt;h2&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;This text presents the concept and characteristics of &lt;strong&gt;value injection on traits&lt;/strong&gt; which is a Dependency Injection (DI)
 variant in Scala which I have been using lately instead of the
