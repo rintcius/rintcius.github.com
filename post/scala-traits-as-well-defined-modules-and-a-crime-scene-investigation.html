@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Scala traits as well-defined modules - And a crime scene investigation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Rintcius Blok">
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="http://blog.rintcius.nl/theme/css/io-svc-simple.css" type="text/css" />
+    <style type="text/css">
+      .tag-1 {
+        font-size: 13pt;
+      }
+      .tag-2 {
+        font-size: 10pt;
+      }
+      .tag-2 {
+        font-size: 8pt;
+      }
+      .tag-4 {
+        font-size: 6pt;
+      }
+      .well {
+        border-color: #16212A;
+      }
+      .sidebar-nav h4 {
+        color: #16212A;
+      }
+      .sidebar-nav h4 i {
+        color: #16212A;
+      }
+      .sidebar-nav i {
+        color:  #a0d6ff;
+      }
+      .sidebar-nav li {
+          list-style: none;
+      }
+      #content {
+          padding-top: 70px;
+      }
+      #about-me {
+          background-color: #a0d6ff;
+          color: #021320;
+      }
+    </style>
+    <link href="http://blog.rintcius.nl/theme/css/bootstrap-responsive.min.css" rel="stylesheet">
+        <link href="http://blog.rintcius.nl/theme/css/font-awesome.css" rel="stylesheet">
+
+    <link href="http://blog.rintcius.nl/theme/css/pygments.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="http://blog.rintcius.nl/theme/images/favicon.ico">
+    <link rel="apple-touch-icon" href="http://blog.rintcius.nl/theme/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="http://blog.rintcius.nl/theme/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="http://blog.rintcius.nl/theme/images/apple-touch-icon-114x114.png">
+
+    <link href="http://blog.rintcius.nl/" type="application/atom+xml" rel="alternate" title="Blok blogs ATOM Feed" />
+    
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="http://blog.rintcius.nl/index.html">Blok blogs </a>
+          <div class="nav-collapse">
+            <ul class="nav">
+                                                                    <li class="divider-vertical"></li>
+                                              <li class="active">
+                    <a href="http://blog.rintcius.nl/category/post.html">
+						<i class="icon-folder-open icon-large"></i>post
+					</a>
+                  </li>
+              
+                          <ul class="nav pull-right">
+                                <li><a href="http://blog.rintcius.nl/archives.html"><i class="icon-th-list"></i>Archives</a></li>
+                          </ul>
+
+            </ul>
+            <!--<p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>-->
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="span9" id="content">
+            <section>
+        <article>
+                <header>
+                    <div class="page-header">
+                        <h1>
+                                <a href=""
+                                        rel="bookmark"
+                                        title="Permalink to Scala traits as well-defined modules - And a crime scene investigation">
+                                        Scala traits as well-defined modules - And a crime scene investigation
+                                </a>
+                                <a href="http://twitter.com/share" class="twitter-share-button"
+   data-count="horizontal" data-via="rintcius">Tweet</a>
+<script type="text/javascript" src="http://platform.twitter.com/widgets.js">
+</script>
+                        </h1>
+                    </div>
+                </header>
+                <div class="entry-content">
+                <div class="section" id="csi">
+<h2>CSI</h2>
+<p><em>Crime scene.</em> Programs are being blown up.</p>
+<p><em>Location.</em> In traits.</p>
+<p><em>Pattern.</em> Abstract values are always around.</p>
+<p><em>Hmmm.</em> Suspicious.</p>
+<p><strong>Things are not always what they seem to be.</strong></p>
+<p>There appears to be some controversy around the inclusion of abstract values in traits,
+since they are often seen together with <code>NullPointerException (NPE)</code>'s.
+And indeed, abstract values <em>do</em> tend to be there at the crime scene all the time.
+But let us avoid mixing up their presence with their guilt. Being at the spot doesn't make them the culprit.</p>
+<p>In fact, I want to jump to the <em>opposite</em> conclusion.
+I have <em>never</em> come across a case where an abstract value in a trait was the cause of a <code>NPE</code>.
+Abstract values are innocent. <em>Always</em>. Including abstract values in traits is perfectly OK.
+But there is a reason why they tend to be there at the crime scene and it's not because they are nosy spectators either.
+It's because they are the <em>victims</em> of the crime (isn't it ironic?).</p>
+<p>Furthermore, I would like to mention that abstract values in traits are <em>useful</em>,
+so useful even that I dedicated a post on a <a class="reference external" href="http://blog.rintcius.nl/post/di-on-steroids-with-scala-value-injection-on-traits.html">pattern that has abstract values in traits as a basis</a>.
+(<strong>[push]</strong> Although it's true that usefulness is a very relative thing, so your mileage may vary. I even know people who don't see any use in Scala (or any other programming language).
+So how to say anything useful about usefulness? But let's ignore that usefulness is relative thing. <strong>[pop]</strong>). They are <em>incredibly</em> useful.
+So if you start eliminating abstract values because of <code>NPE</code>'s,
+then you are not just shooting the innocents, the victims, not just the saints, but you also get rid of incredibly useful beings.</p>
+<p>If not abstract values, then who are the bad guys here?
+Well, the bad guys can <em>be</em> a lot of things.
+(And maybe that's part of the reason why the poor guys who are always around at the crime scene get the blame.)
+It is probably more helpful to tell you what they <em>do</em>: they abuse the abstract values.
+Yes, really! That's literally what they do, <em>abusing</em> the abstract values...</p>
+<p><em>Hey man, this can not be tolerated! Can't you do anything?</em></p>
+<p>... This post shall investigate this matter and will not rest until the truth is on the table!</p>
+<p><em>Let's cut the CSI crap then &amp; get going!</em></p>
+<p>Ok, ok. Easy. I am starting already.</p>
+</div>
+<div class="section" id="scala-traits-as-well-defined-modules">
+<h2>Scala traits as well-defined modules</h2>
+<p>(That is the first part of the title of this post in case you forgot.)
+The goal of this post is to present a principle that can help to avoid runtime problems when you are using abstract values in traits.
+This principle is: <strong>check whether your traits are well-defined modules and fix them if they are not</strong>.</p>
+<p>First, I'll try to make clear what I mean with <em>traits being well-defined modules</em>.
+In the paragraph after that I'll show you some examples to clarify it further.
+Then I'll do a reality check.
+And finally, I will give a summary and ask for your help to take this further.</p>
+<div class="section" id="module-well-defined-what-do-you-mean">
+<h3>Module? Well-defined? What do you mean?</h3>
+<p>When thinking about how to name this, the best term that I could think of was <strong>module</strong>.
+However, without further explanation this term is not necessarily clear enough.
+For example, <a class="reference external" href="http://en.wikipedia.org/wiki/Modularity#Modularity_in_technology_and_management">Wikipedia</a> describes modularity as follows:</p>
+<blockquote>
+modular products are systems of components that are &quot;loosely coupled&quot;.</blockquote>
+<p>Well, here it means something <em>different</em> than this.
+I think it is not necessary to come up with a formal definition here, but
+what I would like to stress with the term <strong>module</strong>, is that you will have to look at your trait <strong>in isolation</strong>.
+I hope that will load the intended meaning of module in your mind.</p>
+<p>And then, looking at your trait in isolation, decide if <em>that</em> is <strong>well-defined</strong> or not.
+<em>Well-defined?</em> Yeah... Basically, that's what compilers do all the time, deciding whether the stuff you type is well-defined or not.
+So I'd like you to pretend you are a compiler for a while. <strong>DON'T PANIC!</strong></p>
+<p>You can delegate most of the decisions that you will have to make to the real Scala compiler.
+The only difference is when you answer this question with yes:
+<strong>Would initialisation of the trait in isolation lead to use of an abstract value?</strong>
+If it does then you always throw this trait in the ill-defined basket.
+I know it's not the most precise definition, and I guess feeding this definition to the average compiler would make it panic big time,
+but I trust pretend-compilers like you can handle this definition just fine (if not now then hopefully by the end of next section).
+Let's call this method of deciding <em>the way of the compiler</em>.</p>
+<p>The nice thing is that there is a way how you can <em>verify</em> whether your decision was correct.
+This is by actually <em>using</em> the trait. Let's call this <em>the way of the runtime</em>.
+If you can use the trait (in isolation) in such a way that it <em>causes</em> a <code>NPE</code> - remember to trace it back to the <em>root cause</em> - then it is ill-defined.</p>
+</div>
+<div class="section" id="traits-as-well-defined-modules-by-example">
+<h3>Traits as well-defined modules by example</h3>
+<p>As a simple example, let's take a look at this trait:</p>
+<div class="highlight"><pre>trait A {
+  val someVal: String
+  val aVal = someVal
+}
+</pre></div>
+<p>Initialising this trait would lead to the use of the abstract value <code>someVal</code> (by <code>aVal</code>),
+so by following the way of the compiler, this trait is ill-defined:</p>
+<div class="highlight"><pre>val aVal = someVal // DOES NOT COMPILE
+</pre></div>
+<p>Or via the way of the runtime: yes, this trait can be the cause of a <code>NPE</code>. E.g. in this code:</p>
+<div class="highlight"><pre>new A {
+  val someVal = &quot;value&quot;
+}.aVal.substring(0,3)
+</pre></div>
+<p>This code will throw a <code>NPE</code> because <code>aVal</code> is <code>null</code> and <code>aVal</code> is <code>null</code> because it tried to use <code>someVal</code>
+at the wrong time (it is <em>able</em> to do this). Hence <code>val aVal = someVal</code> is ill-defined.
+(And thus <code>trait A</code> is ill-defined and thus the whole program is ill-defined. <em>Oops</em>.)</p>
+<p>Please note that there are ways to &quot;patch&quot; these kinds of <code>NPE</code>'s. E.g. this code will <em>not</em> result in a <code>NPE</code>:</p>
+<div class="highlight"><pre>new { val someVal = &quot;value&quot;} with A{}.aVal.substring(0,3)
+</pre></div>
+<p>So, what I <em>don't mean</em> is that it will <em>always</em> result in a <code>NPE</code>. It is sufficient to show that it <em>can</em> result in a <code>NPE</code>.</p>
+<p>On the other hand, the following trait is well-defined, since initialising it (in isolation) does not lead to the use of any abstract value:</p>
+<div class="highlight"><pre>trait B {
+  val someVal: String
+  lazy val aLazyVal = someVal
+  def aDef = someVal
+}
+</pre></div>
+<p>It may be instructive to also look at this trait via the way of the runtime: can I <em>use</em> this trait in such a way that it can cause an <code>NPE</code>?
+Hopefully you will conclude in this case it cannot (but see the feedback section if you conclude different):
+use of neither <code>someVal</code>, <code>aLazyVal</code> nor <code>aDef</code> can lead to a <code>NPE</code>
+unless you commit a crime <em>outside</em> the trait (e.g. setting <code>someVal</code> to <code>null</code>).</p>
+<p>If you like to see more examples (including more complex use-cases), please have a look at
+<a class="reference external" href="https://github.com/rintcius/scala-stuff/blob/master/src/test/scala/nl/rintcius/poc/AbstractValInTraitSpec.scala">this code</a>.</p>
+</div>
+<div class="section" id="reality-check">
+<h3>Reality check</h3>
+<p>Before it's time for the ultimate reality check (your weighted sum of feedback) it's time to check reality with the mighty <a class="reference external" href="http://www.scala-lang.org/docu/files/tools/scalac.html">ScalaCop</a>.
+<code>scalac</code> has a bunch of compiler options, one of which is:</p>
+<div class="highlight"><pre>-Xcheck-null   Emit warning on selection of nullable reference
+</pre></div>
+<p>Great! Let's see what it does (version 2.10.0)... [some time passing here].</p>
+<p>Hmm... <strong>theory &lt;&gt; practise</strong>. <em>I hate it when a plan doesn't come together.</em></p>
+<p>See the diffs (3 of them) in capitals in the code below (it is also annotated with the warnings that <code>scalac</code> returned):</p>
+<div class="highlight"><pre>trait A {
+  val someVal: String
+  val aVal = someVal // [1] DOES NOT CONTAIN WARNING
+}
+
+trait B {
+  val someVal: String
+  lazy val aLazyVal = someVal
+
+  def aDef = someVal
+}
+
+trait C {
+  val someVal: String
+  println(someVal.substring(0, 3))  //potential null pointer dereference: someVal.substring
+}
+
+new A {
+  val someVal = &quot;value&quot;
+}.aVal.substring(0, 3) // potential null pointer dereference: {
+
+new {
+  val someVal = &quot;value&quot;
+} with A {}.aVal.substring(0, 3) must_== &quot;val&quot; // potential null pointer dereference: {
+
+new B {
+  val someVal = &quot;value&quot;
+}.aLazyVal.substring(0, 3) must_== &quot;val&quot; // potential null pointer dereference: { [2] CONTAINS WARNING
+
+new B {
+  val someVal = &quot;value&quot;
+}.aDef.substring(0, 3) must_== &quot;val&quot; // potential null pointer dereference: { [3] CONTAINS WARNING
+
+new C {
+  val someVal = &quot;value&quot;
+} must throwA[NullPointerException] // potential null pointer dereference: SimpleValInTraitSpec.this.theValue[nl.rintcius.poc.SimpleValInTraitSpec.C]({
+</pre></div>
+<p>Here is the <a class="reference external" href="https://github.com/rintcius/scala-stuff/blob/master/src/test/scala/nl/rintcius/poc/SimpleAbstractValInTraitSpec.scala">full source code (annotated with the warnings)</a> and
+here is the <a class="reference external" href="https://github.com/rintcius/scala-stuff/blob/master/compile.out">output of the compiler</a> (by the way, there are also a bunch of <code>specs</code> related warnings in here that I don't understand).</p>
+</div>
+<div class="section" id="summary">
+<h3>Summary</h3>
+<p>Here is a summary of this post (each hypothesis item has an associated reasoning item with the same number):</p>
+<p><strong>Hypotheses:</strong></p>
+<ol class="arabic simple">
+<li>It makes sense to look at traits as well-defined modules (both for the compiler and for developers).</li>
+<li>It is always ok to declare abstract values in traits.</li>
+<li>Avoid code that uses abstract values in traits during the initialization phase.</li>
+<li>After the trait is instantiated it is ok to use abstract values.</li>
+</ol>
+<p><strong>Reasoning:</strong></p>
+<ol class="arabic simple">
+<li>It makes reasoning about the code simpler.</li>
+<li>It is the <em>use</em> of abstract values that may cause problems (see next point).</li>
+<li>As long as the trait is initializing there is no guarantee that the abstract value has a value.</li>
+<li>After the trait is instantiated the abstract value must have a value, so then it is ok to use it.</li>
+</ol>
+<p><code>scalac -Xcheck-null</code> does <em>not</em> support this reasoning.</p>
+</div>
+<div class="section" id="feedback">
+<h3>Feedback</h3>
+<p>What do you make of it?</p>
+<p>There are a couple of things that I am particularly curious of:</p>
+<ul class="simple">
+<li>Are there mistakes in my reasoning? If so where?</li>
+<li>Are there any reasons why <code>scalac</code> can't give the results that I was expecting?</li>
+<li>On <em>well-defined modules</em> (and its well-definedness):<ul>
+<li>Do <em>you</em> see any added value in looking at traits as well-defined modules?</li>
+<li>Do <em>the way of the compiler</em> and <em>the way of the runtime</em> always match with each other, or can you give examples where they give a different result?</li>
+</ul>
+</li>
+<li>After I saw the cause of the <code>NPE</code>'s, I could avoid defining ill-defined traits, but I would like to know about your situation. Are there cases where you cannot avoid using ill-defined traits? If so when?</li>
+</ul>
+</div>
+</div>
+
+                    <div class="well">
+                            <footer class="post-info">
+<span class="label">Date</span>
+<abbr class="published" title="2013-03-07T00:00:00">
+        <i class="icon-calendar"></i>Thu 07 March 2013
+</abbr>
+<span class="label">By</span>
+<i class="icon-user"></i><a href="http://blog.rintcius.nl/author/rintcius-blok.html">Rintcius Blok</a>
+<span class="label">Category</span>
+<i class="icon-folder-open"></i><a href="http://blog.rintcius.nl/category/post.html">post</a>
+
+
+<span class="label">Tags</span>
+    <i class="icon-tag"></i><a href="http://blog.rintcius.nl/tag/scala.html">scala</a>
+    <i class="icon-tag"></i><a href="http://blog.rintcius.nl/tag/trait.html">trait</a>
+    <i class="icon-tag"></i><a href="http://blog.rintcius.nl/tag/module.html">module</a>
+    <i class="icon-tag"></i><a href="http://blog.rintcius.nl/tag/abstract-value.html">abstract value</a>
+</footer><!-- /.post-info -->                    </div>
+                </div><!-- /.entry-content -->
+                                <div class="comments">
+                <h2>Comments</h2>
+                        <div id="disqus_thread"></div>
+                        <script type="text/javascript">
+                           var disqus_identifier = "post/scala-traits-as-well-defined-modules-and-a-crime-scene-investigation.html";
+                           (function() {
+                                var dsq = document.createElement('script');
+                                dsq.type = 'text/javascript'; dsq.async = true;
+                                dsq.src = 'http://rintcius.disqus.com/embed.js';
+                                (document.getElementsByTagName('head')[0] ||
+                                 document.getElementsByTagName('body')[0]).appendChild(dsq);
+                          })();
+                        </script>
+                </div>
+                        </article>
+</section>
+        </div><!--/span-->
+
+
+            <div style="margin-top: 100px" class="span3 sidebar-nav" id="sidebar">
+
+    <ul class="nav nav-list">
+                <div class="well">
+            <li class="nav-header"><h4><i class="icon-external-link"></i>links</h4></li>
+            <ul>
+                                <li><i class="icon-external-link"></i><a href="http://webservices.io">webservices.io</a></li>
+                            </ul>
+        </div>
+        
+                <div class="well">
+            <li class="nav-header"><h4><i class="icon-home icon-large"></i>social</h4></li>
+            <ul>
+                <li>
+                    <i style="color: #a0d6ff;" class="icon-bookmark icon-large"></i><a href="http://blog.rintcius.nl/" rel="alternate">atom feed</a>
+                </li>
+                                                <li>
+                    <i class="icon-twitter-sign icon-large"></i><a href="http://twitter.com/rintcius">twitter</a>
+                </li>
+                                <li>
+                    <i class="icon-github-sign icon-large"></i><a href="http://github.com/rintcius">github</a>
+                </li>
+                            </ul>
+        </div>
+        
+        <div class="well">
+            <li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
+            <ul>
+                                <li>
+                    <i class="icon-folder-open icon-large"></i><a href="http://blog.rintcius.nl/category/post.html">post</a>
+                </li>
+                            </ul>
+        </div>
+
+                        <div class="well">
+            <li class="nav-header"><h4><i class="icon-file icon-large"></i>Related Posts</h4></li>
+            <ul>
+                                <li>
+                    <i class="icon-file icon-large"></i>
+                    <a href="http://blog.rintcius.nl/post/di-in-scala-warmer-example-using-value-injection.html">DI in Scala: Warmer example using Value injection</a>
+                </li>
+                                <li>
+                    <i class="icon-file icon-large"></i>
+                    <a href="http://blog.rintcius.nl/post/di-on-steroids-with-scala-value-injection-on-traits.html">Dependency Injection on steroids with Scala : Value injection on traits</a>
+                </li>
+                            </ul>
+        </div>
+                
+        <div class="well">
+            <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
+            <ul>
+                                <li class="tag-4">
+                    <a href="http://blog.rintcius.nl/tag/module.html">module</a>
+                </li>
+                                <li class="tag-4">
+                    <a href="http://blog.rintcius.nl/tag/misc.html">misc</a>
+                </li>
+                                <li class="tag-2">
+                    <a href="http://blog.rintcius.nl/tag/dependency-injection.html">dependency injection</a>
+                </li>
+                                <li class="tag-1">
+                    <a href="http://blog.rintcius.nl/tag/scala.html">scala</a>
+                </li>
+                                <li class="tag-4">
+                    <a href="http://blog.rintcius.nl/tag/abstract-value.html">abstract value</a>
+                </li>
+                                <li class="tag-4">
+                    <a href="http://blog.rintcius.nl/tag/trait.html">trait</a>
+                </li>
+                                <li class="tag-2">
+                    <a href="http://blog.rintcius.nl/tag/software-design.html">software design</a>
+                </li>
+                            </ul>
+        </div>
+
+        <div class="well">
+        <li class="nav-header"><h4><i class="icon-twitter-sign"></i>Twitter</h4></li>
+<script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
+<script>
+new TWTR.Widget({
+  version: 2,
+  type: 'profile',
+  rpp: 4,
+  interval: 30000,
+  width: 'auto',
+  height: 300,
+  theme: {
+	shell: {
+	  background: '#f5f5f5',
+	  color: '#000000'
+	},
+	tweets: {
+	  background: '#ffffff',
+	  color: '#000000',
+	  links: '#1a50a1'
+	}
+  },
+  features: {
+	scrollbar: false,
+	loop: false,
+	live: false,
+	behavior: 'all'
+  }
+}).render().setUser('rintcius').start();
+</script>
+        </div>
+        
+            </ul>
+
+</div><!--/.well -->
+
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+      </footer>
+
+    </div><!--/.fluid-container-->
+
+
+    <script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-395810-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+        <script type="text/javascript">
+    var disqus_shortname = 'rintcius';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+
+    <!-- Le javascript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="http://blog.rintcius.nl/theme/js/jquery-1.7.2.min.js"></script>
+    <script src="http://blog.rintcius.nl/theme/js/bootstrap.min.js"></script>
+  </body>
+</html>

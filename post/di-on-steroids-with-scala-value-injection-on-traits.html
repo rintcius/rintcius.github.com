@@ -169,12 +169,6 @@ class ColonMovieFinder(filename: String) extends MovieFinder {
 </pre></div>
 <p>Although contrived in this simple example, the key is that <code>MovieLister</code> can be a <strong>trait</strong> (apart from a <code>class</code>) while
 nicely <strong>separating concerns</strong> by using a <code>val</code> to access the functionality of <code>MovieFinder</code>.</p>
-<p><strong>Note</strong> (thanks Naftoli for your comment):
-when used in e.g. the cake pattern, abstract values are usually a source of <code>NullPointerException</code>'s and you will
-have to workaround it by using <code>lazy val</code>'s (and even then it can get tricky).
-This happens since you don't have any control over when a <code>val</code> is instantiated.
-When you use this pattern though, since the concerns are separated, you <em>can</em> control it and you don't have
-to worry about <code>NullPointerException</code>'s and resort to <code>lazy val</code>'s.</p>
 <p>The next section will show more interesting characteristics of the wirable code.</p>
 <p>The wiring code can then be as simple as this (so simple that you can hardly call it wiring):</p>
 <div class="highlight"><pre>val myLister = new MovieLister {
@@ -414,17 +408,26 @@ please get in touch via <a class="reference external" href="http://twitter.com/r
         <div class="well">
             <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
             <ul>
-                                <li class="tag-1">
-                    <a href="http://blog.rintcius.nl/tag/scala.html">scala</a>
-                </li>
-                                <li class="tag-1">
-                    <a href="http://blog.rintcius.nl/tag/software-design.html">software design</a>
-                </li>
-                                <li class="tag-1">
-                    <a href="http://blog.rintcius.nl/tag/dependency-injection.html">dependency injection</a>
+                                <li class="tag-4">
+                    <a href="http://blog.rintcius.nl/tag/module.html">module</a>
                 </li>
                                 <li class="tag-4">
                     <a href="http://blog.rintcius.nl/tag/misc.html">misc</a>
+                </li>
+                                <li class="tag-2">
+                    <a href="http://blog.rintcius.nl/tag/dependency-injection.html">dependency injection</a>
+                </li>
+                                <li class="tag-1">
+                    <a href="http://blog.rintcius.nl/tag/scala.html">scala</a>
+                </li>
+                                <li class="tag-4">
+                    <a href="http://blog.rintcius.nl/tag/abstract-value.html">abstract value</a>
+                </li>
+                                <li class="tag-4">
+                    <a href="http://blog.rintcius.nl/tag/trait.html">trait</a>
+                </li>
+                                <li class="tag-2">
+                    <a href="http://blog.rintcius.nl/tag/software-design.html">software design</a>
                 </li>
                             </ul>
         </div>

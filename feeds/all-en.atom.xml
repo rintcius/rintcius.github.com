@@ -1,5 +1,193 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Blok blogs</title><link href="http://blog.rintcius.nl/" rel="alternate"></link><link href="http://blog.rintcius.nl/feeds/all-en.atom.xml" rel="self"></link><id>http://blog.rintcius.nl/</id><updated>2013-01-15T00:00:00+01:00</updated><entry><title>DI in Scala: Warmer example using Value injection</title><link href="http://blog.rintcius.nl/post/di-in-scala-warmer-example-using-value-injection.html" rel="alternate"></link><updated>2013-01-15T00:00:00+01:00</updated><author><name>Rintcius Blok</name></author><id>tag:blog.rintcius.nl,2013-01-15:post/di-in-scala-warmer-example-using-value-injection.html</id><summary type="html">&lt;p&gt;Here is the Warmer example (which was introduced &lt;a href="http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/"&gt;here&lt;/a&gt;)
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Blok blogs</title><link href="http://blog.rintcius.nl/" rel="alternate"></link><link href="http://blog.rintcius.nl/feeds/all-en.atom.xml" rel="self"></link><id>http://blog.rintcius.nl/</id><updated>2013-03-07T00:00:00+01:00</updated><entry><title>Scala traits as well-defined modules - And a crime scene investigation</title><link href="http://blog.rintcius.nl/post/scala-traits-as-well-defined-modules-and-a-crime-scene-investigation.html" rel="alternate"></link><updated>2013-03-07T00:00:00+01:00</updated><author><name>Rintcius Blok</name></author><id>tag:blog.rintcius.nl,2013-03-07:post/scala-traits-as-well-defined-modules-and-a-crime-scene-investigation.html</id><summary type="html">&lt;div class="section" id="csi"&gt;
+&lt;h2&gt;CSI&lt;/h2&gt;
+&lt;p&gt;&lt;em&gt;Crime scene.&lt;/em&gt; Programs are being blown up.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Location.&lt;/em&gt; In traits.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Pattern.&lt;/em&gt; Abstract values are always around.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Hmmm.&lt;/em&gt; Suspicious.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Things are not always what they seem to be.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;There appears to be some controversy around the inclusion of abstract values in traits,
+since they are often seen together with &lt;code&gt;NullPointerException (NPE)&lt;/code&gt;'s.
+And indeed, abstract values &lt;em&gt;do&lt;/em&gt; tend to be there at the crime scene all the time.
+But let us avoid mixing up their presence with their guilt. Being at the spot doesn't make them the culprit.&lt;/p&gt;
+&lt;p&gt;In fact, I want to jump to the &lt;em&gt;opposite&lt;/em&gt; conclusion.
+I have &lt;em&gt;never&lt;/em&gt; come across a case where an abstract value in a trait was the cause of a &lt;code&gt;NPE&lt;/code&gt;.
+Abstract values are innocent. &lt;em&gt;Always&lt;/em&gt;. Including abstract values in traits is perfectly OK.
+But there is a reason why they tend to be there at the crime scene and it's not because they are nosy spectators either.
+It's because they are the &lt;em&gt;victims&lt;/em&gt; of the crime (isn't it ironic?).&lt;/p&gt;
+&lt;p&gt;Furthermore, I would like to mention that abstract values in traits are &lt;em&gt;useful&lt;/em&gt;,
+so useful even that I dedicated a post on a &lt;a class="reference external" href="http://blog.rintcius.nl/post/di-on-steroids-with-scala-value-injection-on-traits.html"&gt;pattern that has abstract values in traits as a basis&lt;/a&gt;.
+(&lt;strong&gt;[push]&lt;/strong&gt; Although it's true that usefulness is a very relative thing, so your mileage may vary. I even know people who don't see any use in Scala (or any other programming language).
+So how to say anything useful about usefulness? But let's ignore that usefulness is relative thing. &lt;strong&gt;[pop]&lt;/strong&gt;). They are &lt;em&gt;incredibly&lt;/em&gt; useful.
+So if you start eliminating abstract values because of &lt;code&gt;NPE&lt;/code&gt;'s,
+then you are not just shooting the innocents, the victims, not just the saints, but you also get rid of incredibly useful beings.&lt;/p&gt;
+&lt;p&gt;If not abstract values, then who are the bad guys here?
+Well, the bad guys can &lt;em&gt;be&lt;/em&gt; a lot of things.
+(And maybe that's part of the reason why the poor guys who are always around at the crime scene get the blame.)
+It is probably more helpful to tell you what they &lt;em&gt;do&lt;/em&gt;: they abuse the abstract values.
+Yes, really! That's literally what they do, &lt;em&gt;abusing&lt;/em&gt; the abstract values...&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Hey man, this can not be tolerated! Can't you do anything?&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;... This post shall investigate this matter and will not rest until the truth is on the table!&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Let's cut the CSI crap then &amp;amp; get going!&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Ok, ok. Easy. I am starting already.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="scala-traits-as-well-defined-modules"&gt;
+&lt;h2&gt;Scala traits as well-defined modules&lt;/h2&gt;
+&lt;p&gt;(That is the first part of the title of this post in case you forgot.)
+The goal of this post is to present a principle that can help to avoid runtime problems when you are using abstract values in traits.
+This principle is: &lt;strong&gt;check whether your traits are well-defined modules and fix them if they are not&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;First, I'll try to make clear what I mean with &lt;em&gt;traits being well-defined modules&lt;/em&gt;.
+In the paragraph after that I'll show you some examples to clarify it further.
+Then I'll do a reality check.
+And finally, I will give a summary and ask for your help to take this further.&lt;/p&gt;
+&lt;div class="section" id="module-well-defined-what-do-you-mean"&gt;
+&lt;h3&gt;Module? Well-defined? What do you mean?&lt;/h3&gt;
+&lt;p&gt;When thinking about how to name this, the best term that I could think of was &lt;strong&gt;module&lt;/strong&gt;.
+However, without further explanation this term is not necessarily clear enough.
+For example, &lt;a class="reference external" href="http://en.wikipedia.org/wiki/Modularity#Modularity_in_technology_and_management"&gt;Wikipedia&lt;/a&gt; describes modularity as follows:&lt;/p&gt;
+&lt;blockquote&gt;
+modular products are systems of components that are &amp;quot;loosely coupled&amp;quot;.&lt;/blockquote&gt;
+&lt;p&gt;Well, here it means something &lt;em&gt;different&lt;/em&gt; than this.
+I think it is not necessary to come up with a formal definition here, but
+what I would like to stress with the term &lt;strong&gt;module&lt;/strong&gt;, is that you will have to look at your trait &lt;strong&gt;in isolation&lt;/strong&gt;.
+I hope that will load the intended meaning of module in your mind.&lt;/p&gt;
+&lt;p&gt;And then, looking at your trait in isolation, decide if &lt;em&gt;that&lt;/em&gt; is &lt;strong&gt;well-defined&lt;/strong&gt; or not.
+&lt;em&gt;Well-defined?&lt;/em&gt; Yeah... Basically, that's what compilers do all the time, deciding whether the stuff you type is well-defined or not.
+So I'd like you to pretend you are a compiler for a while. &lt;strong&gt;DON'T PANIC!&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;You can delegate most of the decisions that you will have to make to the real Scala compiler.
+The only difference is when you answer this question with yes:
+&lt;strong&gt;Would initialisation of the trait in isolation lead to use of an abstract value?&lt;/strong&gt;
+If it does then you always throw this trait in the ill-defined basket.
+I know it's not the most precise definition, and I guess feeding this definition to the average compiler would make it panic big time,
+but I trust pretend-compilers like you can handle this definition just fine (if not now then hopefully by the end of next section).
+Let's call this method of deciding &lt;em&gt;the way of the compiler&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;The nice thing is that there is a way how you can &lt;em&gt;verify&lt;/em&gt; whether your decision was correct.
+This is by actually &lt;em&gt;using&lt;/em&gt; the trait. Let's call this &lt;em&gt;the way of the runtime&lt;/em&gt;.
+If you can use the trait (in isolation) in such a way that it &lt;em&gt;causes&lt;/em&gt; a &lt;code&gt;NPE&lt;/code&gt; - remember to trace it back to the &lt;em&gt;root cause&lt;/em&gt; - then it is ill-defined.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="traits-as-well-defined-modules-by-example"&gt;
+&lt;h3&gt;Traits as well-defined modules by example&lt;/h3&gt;
+&lt;p&gt;As a simple example, let's take a look at this trait:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;trait A {
+  val someVal: String
+  val aVal = someVal
+}
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Initialising this trait would lead to the use of the abstract value &lt;code&gt;someVal&lt;/code&gt; (by &lt;code&gt;aVal&lt;/code&gt;),
+so by following the way of the compiler, this trait is ill-defined:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;val aVal = someVal // DOES NOT COMPILE
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Or via the way of the runtime: yes, this trait can be the cause of a &lt;code&gt;NPE&lt;/code&gt;. E.g. in this code:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;new A {
+  val someVal = &amp;quot;value&amp;quot;
+}.aVal.substring(0,3)
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This code will throw a &lt;code&gt;NPE&lt;/code&gt; because &lt;code&gt;aVal&lt;/code&gt; is &lt;code&gt;null&lt;/code&gt; and &lt;code&gt;aVal&lt;/code&gt; is &lt;code&gt;null&lt;/code&gt; because it tried to use &lt;code&gt;someVal&lt;/code&gt;
+at the wrong time (it is &lt;em&gt;able&lt;/em&gt; to do this). Hence &lt;code&gt;val aVal = someVal&lt;/code&gt; is ill-defined.
+(And thus &lt;code&gt;trait A&lt;/code&gt; is ill-defined and thus the whole program is ill-defined. &lt;em&gt;Oops&lt;/em&gt;.)&lt;/p&gt;
+&lt;p&gt;Please note that there are ways to &amp;quot;patch&amp;quot; these kinds of &lt;code&gt;NPE&lt;/code&gt;'s. E.g. this code will &lt;em&gt;not&lt;/em&gt; result in a &lt;code&gt;NPE&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;new { val someVal = &amp;quot;value&amp;quot;} with A{}.aVal.substring(0,3)
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;So, what I &lt;em&gt;don't mean&lt;/em&gt; is that it will &lt;em&gt;always&lt;/em&gt; result in a &lt;code&gt;NPE&lt;/code&gt;. It is sufficient to show that it &lt;em&gt;can&lt;/em&gt; result in a &lt;code&gt;NPE&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;On the other hand, the following trait is well-defined, since initialising it (in isolation) does not lead to the use of any abstract value:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;trait B {
+  val someVal: String
+  lazy val aLazyVal = someVal
+  def aDef = someVal
+}
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It may be instructive to also look at this trait via the way of the runtime: can I &lt;em&gt;use&lt;/em&gt; this trait in such a way that it can cause an &lt;code&gt;NPE&lt;/code&gt;?
+Hopefully you will conclude in this case it cannot (but see the feedback section if you conclude different):
+use of neither &lt;code&gt;someVal&lt;/code&gt;, &lt;code&gt;aLazyVal&lt;/code&gt; nor &lt;code&gt;aDef&lt;/code&gt; can lead to a &lt;code&gt;NPE&lt;/code&gt;
+unless you commit a crime &lt;em&gt;outside&lt;/em&gt; the trait (e.g. setting &lt;code&gt;someVal&lt;/code&gt; to &lt;code&gt;null&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;If you like to see more examples (including more complex use-cases), please have a look at
+&lt;a class="reference external" href="https://github.com/rintcius/scala-stuff/blob/master/src/test/scala/nl/rintcius/poc/AbstractValInTraitSpec.scala"&gt;this code&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reality-check"&gt;
+&lt;h3&gt;Reality check&lt;/h3&gt;
+&lt;p&gt;Before it's time for the ultimate reality check (your weighted sum of feedback) it's time to check reality with the mighty &lt;a class="reference external" href="http://www.scala-lang.org/docu/files/tools/scalac.html"&gt;ScalaCop&lt;/a&gt;.
+&lt;code&gt;scalac&lt;/code&gt; has a bunch of compiler options, one of which is:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;-Xcheck-null   Emit warning on selection of nullable reference
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Great! Let's see what it does (version 2.10.0)... [some time passing here].&lt;/p&gt;
+&lt;p&gt;Hmm... &lt;strong&gt;theory &amp;lt;&amp;gt; practise&lt;/strong&gt;. &lt;em&gt;I hate it when a plan doesn't come together.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;See the diffs (3 of them) in capitals in the code below (it is also annotated with the warnings that &lt;code&gt;scalac&lt;/code&gt; returned):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;trait A {
+  val someVal: String
+  val aVal = someVal // [1] DOES NOT CONTAIN WARNING
+}
+
+trait B {
+  val someVal: String
+  lazy val aLazyVal = someVal
+
+  def aDef = someVal
+}
+
+trait C {
+  val someVal: String
+  println(someVal.substring(0, 3))  //potential null pointer dereference: someVal.substring
+}
+
+new A {
+  val someVal = &amp;quot;value&amp;quot;
+}.aVal.substring(0, 3) // potential null pointer dereference: {
+
+new {
+  val someVal = &amp;quot;value&amp;quot;
+} with A {}.aVal.substring(0, 3) must_== &amp;quot;val&amp;quot; // potential null pointer dereference: {
+
+new B {
+  val someVal = &amp;quot;value&amp;quot;
+}.aLazyVal.substring(0, 3) must_== &amp;quot;val&amp;quot; // potential null pointer dereference: { [2] CONTAINS WARNING
+
+new B {
+  val someVal = &amp;quot;value&amp;quot;
+}.aDef.substring(0, 3) must_== &amp;quot;val&amp;quot; // potential null pointer dereference: { [3] CONTAINS WARNING
+
+new C {
+  val someVal = &amp;quot;value&amp;quot;
+} must throwA[NullPointerException] // potential null pointer dereference: SimpleValInTraitSpec.this.theValue[nl.rintcius.poc.SimpleValInTraitSpec.C]({
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here is the &lt;a class="reference external" href="https://github.com/rintcius/scala-stuff/blob/master/src/test/scala/nl/rintcius/poc/SimpleAbstractValInTraitSpec.scala"&gt;full source code (annotated with the warnings)&lt;/a&gt; and
+here is the &lt;a class="reference external" href="https://github.com/rintcius/scala-stuff/blob/master/compile.out"&gt;output of the compiler&lt;/a&gt; (by the way, there are also a bunch of &lt;code&gt;specs&lt;/code&gt; related warnings in here that I don't understand).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="summary"&gt;
+&lt;h3&gt;Summary&lt;/h3&gt;
+&lt;p&gt;Here is a summary of this post (each hypothesis item has an associated reasoning item with the same number):&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Hypotheses:&lt;/strong&gt;&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;It makes sense to look at traits as well-defined modules (both for the compiler and for developers).&lt;/li&gt;
+&lt;li&gt;It is always ok to declare abstract values in traits.&lt;/li&gt;
+&lt;li&gt;Avoid code that uses abstract values in traits during the initialization phase.&lt;/li&gt;
+&lt;li&gt;After the trait is instantiated it is ok to use abstract values.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;Reasoning:&lt;/strong&gt;&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;It makes reasoning about the code simpler.&lt;/li&gt;
+&lt;li&gt;It is the &lt;em&gt;use&lt;/em&gt; of abstract values that may cause problems (see next point).&lt;/li&gt;
+&lt;li&gt;As long as the trait is initializing there is no guarantee that the abstract value has a value.&lt;/li&gt;
+&lt;li&gt;After the trait is instantiated the abstract value must have a value, so then it is ok to use it.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;code&gt;scalac -Xcheck-null&lt;/code&gt; does &lt;em&gt;not&lt;/em&gt; support this reasoning.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="feedback"&gt;
+&lt;h3&gt;Feedback&lt;/h3&gt;
+&lt;p&gt;What do you make of it?&lt;/p&gt;
+&lt;p&gt;There are a couple of things that I am particularly curious of:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Are there mistakes in my reasoning? If so where?&lt;/li&gt;
+&lt;li&gt;Are there any reasons why &lt;code&gt;scalac&lt;/code&gt; can't give the results that I was expecting?&lt;/li&gt;
+&lt;li&gt;On &lt;em&gt;well-defined modules&lt;/em&gt; (and its well-definedness):&lt;ul&gt;
+&lt;li&gt;Do &lt;em&gt;you&lt;/em&gt; see any added value in looking at traits as well-defined modules?&lt;/li&gt;
+&lt;li&gt;Do &lt;em&gt;the way of the compiler&lt;/em&gt; and &lt;em&gt;the way of the runtime&lt;/em&gt; always match with each other, or can you give examples where they give a different result?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;After I saw the cause of the &lt;code&gt;NPE&lt;/code&gt;'s, I could avoid defining ill-defined traits, but I would like to know about your situation. Are there cases where you cannot avoid using ill-defined traits? If so when?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</summary><category term="scala"></category><category term="trait"></category><category term="module"></category><category term="abstract value"></category></entry><entry><title>DI in Scala: Warmer example using Value injection</title><link href="http://blog.rintcius.nl/post/di-in-scala-warmer-example-using-value-injection.html" rel="alternate"></link><updated>2013-01-15T00:00:00+01:00</updated><author><name>Rintcius Blok</name></author><id>tag:blog.rintcius.nl,2013-01-15:post/di-in-scala-warmer-example-using-value-injection.html</id><summary type="html">&lt;p&gt;Here is the Warmer example (which was introduced &lt;a href="http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/"&gt;here&lt;/a&gt;)
 using &lt;a href="http://blog.rintcius.nl/post/di-on-steroids-with-scala-value-injection-on-traits.html"&gt;value injection on traits&lt;/a&gt;:&lt;/p&gt;
 &lt;script src="https://gist.github.com/4538061.js"&gt;&lt;/script&gt;</summary><category term="scala"></category><category term="software design"></category><category term="dependency injection"></category></entry><entry><title>Dependency Injection on steroids with Scala : Value injection on traits</title><link href="http://blog.rintcius.nl/post/di-on-steroids-with-scala-value-injection-on-traits.html" rel="alternate"></link><updated>2013-01-15T00:00:00+01:00</updated><author><name>Rintcius Blok</name></author><id>tag:blog.rintcius.nl,2013-01-15:post/di-on-steroids-with-scala-value-injection-on-traits.html</id><summary type="html">&lt;div class="section" id="introduction"&gt;
 &lt;h2&gt;Introduction&lt;/h2&gt;
@@ -53,12 +241,6 @@ class ColonMovieFinder(filename: String) extends MovieFinder {
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Although contrived in this simple example, the key is that &lt;code&gt;MovieLister&lt;/code&gt; can be a &lt;strong&gt;trait&lt;/strong&gt; (apart from a &lt;code&gt;class&lt;/code&gt;) while
 nicely &lt;strong&gt;separating concerns&lt;/strong&gt; by using a &lt;code&gt;val&lt;/code&gt; to access the functionality of &lt;code&gt;MovieFinder&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt; (thanks Naftoli for your comment):
-when used in e.g. the cake pattern, abstract values are usually a source of &lt;code&gt;NullPointerException&lt;/code&gt;'s and you will
-have to workaround it by using &lt;code&gt;lazy val&lt;/code&gt;'s (and even then it can get tricky).
-This happens since you don't have any control over when a &lt;code&gt;val&lt;/code&gt; is instantiated.
-When you use this pattern though, since the concerns are separated, you &lt;em&gt;can&lt;/em&gt; control it and you don't have
-to worry about &lt;code&gt;NullPointerException&lt;/code&gt;'s and resort to &lt;code&gt;lazy val&lt;/code&gt;'s.&lt;/p&gt;
 &lt;p&gt;The next section will show more interesting characteristics of the wirable code.&lt;/p&gt;
 &lt;p&gt;The wiring code can then be as simple as this (so simple that you can hardly call it wiring):&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;val myLister = new MovieLister {
