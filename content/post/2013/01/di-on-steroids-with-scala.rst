@@ -79,7 +79,7 @@ The wiring code can then be as simple as this (so simple that you can hardly cal
 .. code-block:: none
 
   val myLister = new MovieLister {
-    finder = new ColonMovieFinder("someFile.txt")
+    override val finder = new ColonMovieFinder("someFile.txt")
   }
 
 The section *structure of wiring code* has an example that shows the general structure.
