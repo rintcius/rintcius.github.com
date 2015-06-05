@@ -172,7 +172,7 @@ nicely <strong>separating concerns</strong> by using a <code>val</code> to acces
 <p>The next section will show more interesting characteristics of the wirable code.</p>
 <p>The wiring code can then be as simple as this (so simple that you can hardly call it wiring):</p>
 <div class="highlight"><pre>val myLister = new MovieLister {
-  finder = new ColonMovieFinder(&quot;someFile.txt&quot;)
+  override val finder = new ColonMovieFinder(&quot;someFile.txt&quot;)
 }
 </pre></div>
 <p>The section <em>structure of wiring code</em> has an example that shows the general structure.</p>
