@@ -9,6 +9,7 @@
 
     <!-- Le styles -->
     <link rel="stylesheet" href="http://blog.rintcius.nl/theme/css/io-svc-simple.css" type="text/css" />
+    <link rel="stylesheet" href="http://blog.rintcius.nl/theme/css/aispec.css" type="text/css" />
     <style type="text/css">
       .tag-1 {
         font-size: 13pt;
@@ -62,7 +63,7 @@
     <link rel="apple-touch-icon" sizes="114x114" href="http://blog.rintcius.nl/theme/images/apple-touch-icon-114x114.png">
 
     <link href="http://blog.rintcius.nl/" type="application/atom+xml" rel="alternate" title="Blok blogs ATOM Feed" />
-    
+
   </head>
 
   <body>
@@ -75,16 +76,16 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="http://blog.rintcius.nl/index.html">Blok blogs </a>
+          <a class="brand airbus-italic-bold contrast" style="font-variant: small-caps;text-transform: uppercase" href="http://blog.rintcius.nl/index.html"><span style="top: 3px; position: relative;">Blok blogs</span> </a>
           <div class="nav-collapse">
             <ul class="nav">
-                                                                    <li class="divider-vertical"></li>
-                                              <li >
+                          <li class="divider-vertical"></li>
+                  <li >
                     <a href="http://blog.rintcius.nl/category/post.html">
 						<i class="icon-folder-open icon-large"></i>post
 					</a>
                   </li>
-              
+
                           <ul class="nav pull-right">
                                 <li><a href="http://blog.rintcius.nl/archives.html"><i class="icon-th-list"></i>Archives</a></li>
                           </ul>
@@ -96,10 +97,18 @@
       </div>
     </div>
 
+    <div class="hero-unit">
+        <div class="container-fluid">
+            <div class="row">
+                <h1><a class="brand airbus-italic-bold contrast" style="font-variant: small-caps;text-transform: uppercase;text-decoration: none;font-size: 90px" href="http://blog.rintcius.nl/index.html">Blok blogs </a></h1>
+            </div>
+        </div>
+    </div>
+
     <div class="container-fluid">
       <div class="row">
         <div class="span9" id="content">
-                            <div class="article">
+        <div class="article">
             <div class="page-header">
                 <h1><a href="http://blog.rintcius.nl/post/scala-traits-as-well-defined-modules-and-a-crime-scene-investigation.html">Scala traits as well-defined modules - And a crime scene investigation</a></h1>
             </div>
@@ -116,7 +125,7 @@ since they are often seen together with <code>NullPointerException ...</code></p
                 </div>
                 <div class="well small" style="margin: 20px 0"><footer class="post-info">
 <span class="label">Date</span>
-<abbr class="published" title="2013-03-07T00:00:00">
+<abbr class="published" title="2013-03-07T00:00:00+01:00">
         <i class="icon-calendar"></i>Thu 07 March 2013
 </abbr>
 <span class="label">By</span>
@@ -132,7 +141,51 @@ since they are often seen together with <code>NullPointerException ...</code></p
     <i class="icon-tag"></i><a href="http://blog.rintcius.nl/tag/abstract-value.html">abstract value</a>
 </footer><!-- /.post-info --></div>
         </div>
-                <div class="article">
+        <div class="article">
+            <div class="page-header">
+                <h1><a href="http://blog.rintcius.nl/post/di-in-scala-warmer-example-using-value-injection.html">DI in Scala: Warmer example using Value injection</a></h1>
+            </div>
+                <div class="summary"><p>Here is the Warmer example (which was introduced <a class="reference external" href="http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/">here</a>)
+using <a class="reference external" href="http://blog.rintcius.nl/post/di-on-steroids-with-scala-value-injection-on-traits.html">value injection on traits</a>):</p>
+<blockquote>
+<div class="highlight"><pre>  <span class="c1">// =======================</span>
+  <span class="c1">// service interfaces</span>
+  <span class="k">trait</span> <span class="nc">OnOffDevice</span> <span class="o">{</span>
+    <span class="k">def</span> <span class="n">on</span><span class="k">:</span> <span class="kt">Unit</span>
+    <span class="k">def</span> <span class="n">off</span><span class="k">:</span> <span class="kt">Unit</span>
+  <span class="o">}</span>
+  <span class="k">trait</span> <span class="nc">SensorDevice</span> <span class="o">{</span>
+    <span class="k">def</span> <span class="n">isCoffeePresent</span><span class="k">:</span> <span class="kt">Boolean</span>
+  <span class="o">}</span>
+
+  <span class="c1">// =======================</span>
+  <span class="c1">// service implementations</span>
+  <span class="k">class</span> <span class="nc">Heater</span> <span class="k">extends</span> <span class="nc">OnOffDevice</span> <span class="o">{</span>
+    <span class="k">def</span> <span class="n">on</span> <span class="k">=</span> <span class="n">println</span><span class="o">(</span><span class="s">&quot;heater.on&quot;</span><span class="o">)</span>
+    <span class="k">def</span> <span class="n">off</span> <span class="k">=</span> <span class="n">println</span><span class="o">(</span><span class="s">&quot;heater.off&quot;</span><span class="o">)</span>
+  <span class="o">}</span>
+  <span class="k">class</span> <span class="nc">PotSensor</span> <span class="k">extends</span> <span class="nc">SensorDevice</span> <span class="o">{</span>
+    <span class="k">def ...</span></pre></div></blockquote>
+                        <a class="btn btn-primary xsmall" href="http://blog.rintcius.nl/post/di-in-scala-warmer-example-using-value-injection.html">more ...</a>
+                </div>
+                <div class="well small" style="margin: 20px 0"><footer class="post-info">
+<span class="label">Date</span>
+<abbr class="published" title="2013-01-15T00:00:00+01:00">
+        <i class="icon-calendar"></i>Tue 15 January 2013
+</abbr>
+<span class="label">By</span>
+<i class="icon-user"></i><a href="http://blog.rintcius.nl/author/rintcius-blok.html">Rintcius Blok</a>
+<span class="label">Category</span>
+<i class="icon-folder-open"></i><a href="http://blog.rintcius.nl/category/post.html">post</a>
+
+
+<span class="label">Tags</span>
+    <i class="icon-tag"></i><a href="http://blog.rintcius.nl/tag/scala.html">scala</a>
+    <i class="icon-tag"></i><a href="http://blog.rintcius.nl/tag/software-design.html">software design</a>
+    <i class="icon-tag"></i><a href="http://blog.rintcius.nl/tag/dependency-injection.html">dependency injection</a>
+</footer><!-- /.post-info --></div>
+        </div>
+        <div class="article">
             <div class="page-header">
                 <h1><a href="http://blog.rintcius.nl/post/di-on-steroids-with-scala-value-injection-on-traits.html">Dependency Injection on steroids with Scala : Value injection on traits</a></h1>
             </div>
@@ -147,7 +200,7 @@ variant in Scala which I have been using lately instead of the
                 </div>
                 <div class="well small" style="margin: 20px 0"><footer class="post-info">
 <span class="label">Date</span>
-<abbr class="published" title="2013-01-15T00:00:00">
+<abbr class="published" title="2013-01-15T00:00:00+01:00">
         <i class="icon-calendar"></i>Tue 15 January 2013
 </abbr>
 <span class="label">By</span>
@@ -162,100 +215,53 @@ variant in Scala which I have been using lately instead of the
     <i class="icon-tag"></i><a href="http://blog.rintcius.nl/tag/dependency-injection.html">dependency injection</a>
 </footer><!-- /.post-info --></div>
         </div>
-                <div class="article">
-            <div class="page-header">
-                <h1><a href="http://blog.rintcius.nl/post/di-in-scala-warmer-example-using-value-injection.html">DI in Scala: Warmer example using Value injection</a></h1>
-            </div>
-                <div class="summary"><p>Here is the Warmer example (which was introduced <a href="http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/">here</a>)
-using <a href="http://blog.rintcius.nl/post/di-on-steroids-with-scala-value-injection-on-traits.html">value injection on traits</a>:</p>
-<script src="https://gist.github.com/4538061.js"></script>
-                        <a class="btn btn-primary xsmall" href="http://blog.rintcius.nl/post/di-in-scala-warmer-example-using-value-injection.html">more ...</a>
-                </div>
-                <div class="well small" style="margin: 20px 0"><footer class="post-info">
-<span class="label">Date</span>
-<abbr class="published" title="2013-01-15T00:00:00">
-        <i class="icon-calendar"></i>Tue 15 January 2013
-</abbr>
-<span class="label">By</span>
-<i class="icon-user"></i><a href="http://blog.rintcius.nl/author/rintcius-blok.html">Rintcius Blok</a>
-<span class="label">Category</span>
-<i class="icon-folder-open"></i><a href="http://blog.rintcius.nl/category/post.html">post</a>
+
+        </div><!--/span-->
 
 
-<span class="label">Tags</span>
-    <i class="icon-tag"></i><a href="http://blog.rintcius.nl/tag/scala.html">scala</a>
-    <i class="icon-tag"></i><a href="http://blog.rintcius.nl/tag/software-design.html">software design</a>
-    <i class="icon-tag"></i><a href="http://blog.rintcius.nl/tag/dependency-injection.html">dependency injection</a>
-</footer><!-- /.post-info --></div>
-        </div>
-        
-                        </div><!--/span-->
-
-
-            <div style="margin-top: 100px" class="span3 sidebar-nav" id="sidebar">
+<div style="margin-top: 100px" class="span3 sidebar-nav" id="sidebar">
 
     <ul class="nav nav-list">
-                <div class="well">
+        <div class="well">
             <li class="nav-header"><h4><i class="icon-external-link"></i>links</h4></li>
             <ul>
-                                <li><i class="icon-external-link"></i><a href="http://webservices.io">webservices.io</a></li>
-                            </ul>
+                <li><i class="icon-external-link"></i><a href="http://webservices.io">webservices.io</a></li>
+            </ul>
         </div>
-        
-                <div class="well">
+
+        <div class="well">
             <li class="nav-header"><h4><i class="icon-home icon-large"></i>social</h4></li>
             <ul>
                 <li>
                     <i style="color: #a0d6ff;" class="icon-bookmark icon-large"></i><a href="http://blog.rintcius.nl/" rel="alternate">atom feed</a>
                 </li>
-                                                <li>
+                <li>
                     <i class="icon-twitter-sign icon-large"></i><a href="http://twitter.com/rintcius">twitter</a>
                 </li>
-                                <li>
+                <li>
                     <i class="icon-github-sign icon-large"></i><a href="http://github.com/rintcius">github</a>
                 </li>
-                            </ul>
+            </ul>
         </div>
-        
+
         <div class="well">
             <li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
             <ul>
-                                <li>
+                <li>
                     <i class="icon-folder-open icon-large"></i><a href="http://blog.rintcius.nl/category/post.html">post</a>
                 </li>
-                            </ul>
+            </ul>
         </div>
 
-        
+
         <div class="well">
             <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
             <ul>
-                                <li class="tag-4">
-                    <a href="http://blog.rintcius.nl/tag/misc.html">misc</a>
-                </li>
-                                <li class="tag-1">
-                    <a href="http://blog.rintcius.nl/tag/scala.html">scala</a>
-                </li>
-                                <li class="tag-2">
-                    <a href="http://blog.rintcius.nl/tag/dependency-injection.html">dependency injection</a>
-                </li>
-                                <li class="tag-2">
-                    <a href="http://blog.rintcius.nl/tag/software-design.html">software design</a>
-                </li>
-                                <li class="tag-4">
-                    <a href="http://blog.rintcius.nl/tag/trait.html">trait</a>
-                </li>
-                                <li class="tag-4">
-                    <a href="http://blog.rintcius.nl/tag/module.html">module</a>
-                </li>
-                                <li class="tag-4">
-                    <a href="http://blog.rintcius.nl/tag/abstract-value.html">abstract value</a>
-                </li>
-                            </ul>
+            </ul>
         </div>
 
         <div class="well">
-        <li class="nav-header"><h4><i class="icon-twitter-sign"></i>Twitter</h4></li>
+<li class="nav-header"><h4><i class="icon-twitter-sign"></i>Twitter</h4></li>
 <script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
 <script>
 new TWTR.Widget({
@@ -285,8 +291,8 @@ new TWTR.Widget({
 }).render().setUser('rintcius').start();
 </script>
         </div>
-        
-            </ul>
+
+    </ul>
 
 </div><!--/.well -->
 
@@ -300,7 +306,7 @@ new TWTR.Widget({
     </div><!--/.fluid-container-->
 
 
-    <script type="text/javascript">
+<script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
 </script>
@@ -309,7 +315,7 @@ try {
 	var pageTracker = _gat._getTracker("UA-395810-1");
 pageTracker._trackPageview();
 } catch(err) {}</script>
-        <script type="text/javascript">
+<script type="text/javascript">
     var disqus_shortname = 'rintcius';
     (function () {
         var s = document.createElement('script'); s.async = true;

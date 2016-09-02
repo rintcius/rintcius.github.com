@@ -187,9 +187,56 @@ here is the &lt;a class="reference external" href="https://github.com/rintcius/s
 &lt;/ul&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-</summary><category term="scala"></category><category term="trait"></category><category term="module"></category><category term="abstract value"></category></entry><entry><title>DI in Scala: Warmer example using Value injection</title><link href="http://blog.rintcius.nl/post/di-in-scala-warmer-example-using-value-injection.html" rel="alternate"></link><updated>2013-01-15T00:00:00+01:00</updated><author><name>Rintcius Blok</name></author><id>tag:blog.rintcius.nl,2013-01-15:post/di-in-scala-warmer-example-using-value-injection.html</id><summary type="html">&lt;p&gt;Here is the Warmer example (which was introduced &lt;a href="http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/"&gt;here&lt;/a&gt;)
-using &lt;a href="http://blog.rintcius.nl/post/di-on-steroids-with-scala-value-injection-on-traits.html"&gt;value injection on traits&lt;/a&gt;:&lt;/p&gt;
-&lt;script src="https://gist.github.com/4538061.js"&gt;&lt;/script&gt;</summary><category term="scala"></category><category term="software design"></category><category term="dependency injection"></category></entry><entry><title>Dependency Injection on steroids with Scala : Value injection on traits</title><link href="http://blog.rintcius.nl/post/di-on-steroids-with-scala-value-injection-on-traits.html" rel="alternate"></link><updated>2013-01-15T00:00:00+01:00</updated><author><name>Rintcius Blok</name></author><id>tag:blog.rintcius.nl,2013-01-15:post/di-on-steroids-with-scala-value-injection-on-traits.html</id><summary type="html">&lt;div class="section" id="introduction"&gt;
+</summary><category term="scala"></category><category term="trait"></category><category term="module"></category><category term="abstract value"></category></entry><entry><title>DI in Scala: Warmer example using Value injection</title><link href="http://blog.rintcius.nl/post/di-in-scala-warmer-example-using-value-injection.html" rel="alternate"></link><updated>2013-01-15T00:00:00+01:00</updated><author><name>Rintcius Blok</name></author><id>tag:blog.rintcius.nl,2013-01-15:post/di-in-scala-warmer-example-using-value-injection.html</id><summary type="html">&lt;p&gt;Here is the Warmer example (which was introduced &lt;a class="reference external" href="http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/"&gt;here&lt;/a&gt;)
+using &lt;a class="reference external" href="http://blog.rintcius.nl/post/di-on-steroids-with-scala-value-injection-on-traits.html"&gt;value injection on traits&lt;/a&gt;):&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;  &lt;span class="c1"&gt;// =======================&lt;/span&gt;
+  &lt;span class="c1"&gt;// service interfaces&lt;/span&gt;
+  &lt;span class="k"&gt;trait&lt;/span&gt; &lt;span class="nc"&gt;OnOffDevice&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;on&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Unit&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;off&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Unit&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+  &lt;span class="k"&gt;trait&lt;/span&gt; &lt;span class="nc"&gt;SensorDevice&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;isCoffeePresent&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Boolean&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+  &lt;span class="c1"&gt;// =======================&lt;/span&gt;
+  &lt;span class="c1"&gt;// service implementations&lt;/span&gt;
+  &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Heater&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;OnOffDevice&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;on&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;heater.on&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;off&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;heater.off&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+  &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;PotSensor&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;SensorDevice&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;isCoffeePresent&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;true&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+  &lt;span class="c1"&gt;// =======================&lt;/span&gt;
+  &lt;span class="c1"&gt;// service declaring two dependencies that it wants injected,&lt;/span&gt;
+  &lt;span class="c1"&gt;// is using value injection to declare its dependencies&lt;/span&gt;
+  &lt;span class="k"&gt;trait&lt;/span&gt; &lt;span class="nc"&gt;Warmer&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;potSensor&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;SensorDevice&lt;/span&gt;
+    &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;heater&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;OnOffDevice&lt;/span&gt;
+
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;trigger&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+      &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;potSensor&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;isCoffeePresent&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="n"&gt;heater&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;on&lt;/span&gt;
+      &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="n"&gt;heater&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;off&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+  &lt;span class="c1"&gt;// =======================&lt;/span&gt;
+  &lt;span class="c1"&gt;// instantiate the services in a configuration module&lt;/span&gt;
+  &lt;span class="k"&gt;object&lt;/span&gt; &lt;span class="nc"&gt;Context&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="c1"&gt;// this is where injection happens&lt;/span&gt;
+    &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;warmer&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nc"&gt;Warmer&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+      &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;potSensor&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nc"&gt;PotSensor&lt;/span&gt;
+      &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;heater&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nc"&gt;Heater&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+  &lt;span class="nc"&gt;Context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;warmer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;trigger&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/blockquote&gt;
+</summary><category term="scala"></category><category term="software design"></category><category term="dependency injection"></category></entry><entry><title>Dependency Injection on steroids with Scala : Value injection on traits</title><link href="http://blog.rintcius.nl/post/di-on-steroids-with-scala-value-injection-on-traits.html" rel="alternate"></link><updated>2013-01-15T00:00:00+01:00</updated><author><name>Rintcius Blok</name></author><id>tag:blog.rintcius.nl,2013-01-15:post/di-on-steroids-with-scala-value-injection-on-traits.html</id><summary type="html">&lt;div class="section" id="introduction"&gt;
 &lt;h2&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;This text presents the concept and characteristics of &lt;strong&gt;value injection on traits&lt;/strong&gt; which is a Dependency Injection (DI)
 variant in Scala which I have been using lately instead of the
@@ -222,7 +269,7 @@ And I will end with the conclusions.&lt;/p&gt;
 I have added &lt;em&gt;on traits&lt;/em&gt; to &lt;em&gt;value injection&lt;/em&gt; to make the contrast with classes explicit.
 You &lt;em&gt;can&lt;/em&gt; do value injection on classes, but that looks a lot like the constructor injection pattern that we already know.&lt;/p&gt;
 &lt;p&gt;This is how the &amp;quot;Value injection on traits&amp;quot; pattern looks like, using the movie example of Fowler
-(or if you prefer the &lt;a class="reference external" href="http://blog.rintcius.nl/post/di-in-scala-warmer-example-using-value-injection.html"&gt;Warmer example that Jonas Boner introduced&lt;/a&gt;):&lt;/p&gt;
+(or if you prefer the &lt;a class="reference external" href="|filename|/post/2013/01/warmer-example-using-value-injection.md"&gt;Warmer example that Jonas Boner introduced&lt;/a&gt;):&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;trait MovieFinder {
   def findAll:Seq[Movie]
 }
@@ -241,10 +288,16 @@ class ColonMovieFinder(filename: String) extends MovieFinder {
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Although contrived in this simple example, the key is that &lt;code&gt;MovieLister&lt;/code&gt; can be a &lt;strong&gt;trait&lt;/strong&gt; (apart from a &lt;code&gt;class&lt;/code&gt;) while
 nicely &lt;strong&gt;separating concerns&lt;/strong&gt; by using a &lt;code&gt;val&lt;/code&gt; to access the functionality of &lt;code&gt;MovieFinder&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt; (thanks Naftoli for your comment):
+when used in e.g. the cake pattern, abstract values are usually a source of &lt;code&gt;NullPointerException&lt;/code&gt;'s and you will
+have to workaround it by using &lt;code&gt;lazy val&lt;/code&gt;'s (and even then it can get tricky).
+This happens since you don't have any control over when a &lt;code&gt;val&lt;/code&gt; is instantiated.
+When you use this pattern though, since the concerns are separated, you &lt;em&gt;can&lt;/em&gt; control it and you don't have
+to worry about &lt;code&gt;NullPointerException&lt;/code&gt;'s and resort to &lt;code&gt;lazy val&lt;/code&gt;'s.&lt;/p&gt;
 &lt;p&gt;The next section will show more interesting characteristics of the wirable code.&lt;/p&gt;
 &lt;p&gt;The wiring code can then be as simple as this (so simple that you can hardly call it wiring):&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;val myLister = new MovieLister {
-  finder = new ColonMovieFinder(&amp;quot;someFile.txt&amp;quot;)
+  override val finder = new ColonMovieFinder(&amp;quot;someFile.txt&amp;quot;)
 }
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The section &lt;em&gt;structure of wiring code&lt;/em&gt; has an example that shows the general structure.&lt;/p&gt;
@@ -361,7 +414,51 @@ And finally I like how the &lt;strong&gt;structure of the wiring&lt;/strong&gt; 
 &lt;p&gt;I hope it will be of value to you too.
 Suggestions, ideas and thoughts are welcome!&lt;/p&gt;
 &lt;/div&gt;
-</summary><category term="scala"></category><category term="software design"></category><category term="dependency injection"></category></entry><entry><title>New blog</title><link href="http://blog.rintcius.nl/post/new-blog.html" rel="alternate"></link><updated>2013-01-13T00:00:00+01:00</updated><author><name>Rintcius Blok</name></author><id>tag:blog.rintcius.nl,2013-01-13:post/new-blog.html</id><summary type="html">&lt;p&gt;This is the place of my new blog, moving away from Wordpress, and moving to &lt;a href="http://docs.getpelican.com/"&gt;Pelican&lt;/a&gt;.
+&lt;div class="well section" id="about-me"&gt;
+&lt;h2&gt;About me&lt;/h2&gt;
+&lt;p&gt;This is one of the interesting things that I learned on my software development ride,
+which started last year after quitting my job in Amsterdam and migrating from the Netherlands to Edinburgh, Scotland.&lt;/p&gt;
+&lt;p&gt;I took this move as an opportunity to focus full-time on developing myself in the direction of my fascinations &amp;amp; passions (believe driven development ;)).
+Programming languages is one of my passions and learning more Scala was (and is) one of my goals.&lt;/p&gt;
+&lt;p&gt;I took &lt;a class="reference external" href="https://webservices.io"&gt;webservices.io&lt;/a&gt; as the vehicle of the ride and - apart from learning more Scala -
+here is what I made, in order of coolness (by my definition of coolness, that is):&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;&lt;strong&gt;Backend&lt;/strong&gt; of webservices.io (using Scala with Play2): pluggable service architecture, e.g. the services can be nicely composed.
+Still lots of ideas here (keep you posted).&lt;/li&gt;
+&lt;li&gt;In the &lt;strong&gt;DevOps&lt;/strong&gt; area (using Python):
+flexible infrastructure architecture that enables to quickly switch cloud providers or move to a non-cloud setup.
+Also gained more experience with multiple cloud services (mainly AWS on IAAS level, but also several PAAS solutions);&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Website&lt;/strong&gt; (using Play2 and twitter bootstrap): this, among others, resulted in the first webdesign of which I am not unproud.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;I will soon be reaching the point where I cannot work full-time/speed on &lt;a class="reference external" href="https://webservices.io"&gt;webservices.io&lt;/a&gt; anymore,
+although I will certainly work further on it - with a lower speed - in my spare time.
+Also I am open for &amp;amp; interested in ideas to keep this project going at various levels of speed.&lt;/p&gt;
+&lt;p&gt;Anyway, this has been a great experience.&lt;/p&gt;
+&lt;p&gt;In the future I would really like to continue working in this area - with &lt;em&gt;this area&lt;/em&gt; being loosely defined as:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;strong&gt;Software development and architecture&lt;/strong&gt; - I have mostly been working in the role of software developer and architect,
+but I also enjoy working on other parts of the software lifecycle
+ranging from brainstorming new ideas and analyzing requirements to testing.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;JVM platform&lt;/strong&gt; - My favorite platform. I have experience with the following languages:&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Scala&lt;/strong&gt; - I think Scala has a great future ahead with powers that go way beyond Java&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Java&lt;/strong&gt; - I have been working with Java for more than 10 years; still interested in Java projects&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Groovy&lt;/strong&gt; - I have worked on some Groovy/Grails projects in the past and found it also a pleasure to work with&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Cloud computing&lt;/strong&gt;&lt;ul&gt;
+&lt;li&gt;Development and architecture for cloud-based applications&lt;/li&gt;
+&lt;li&gt;Migrating applications and services to the cloud&lt;/li&gt;
+&lt;li&gt;DevOps work&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Environment&lt;/strong&gt; - I feel at home in agile environment with e.g. start ups,
+but also with enterprises as long as there is a culture of looking forward and to &lt;em&gt;improve&lt;/em&gt; software.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If I can be of help to you in one of these areas,
+please get in touch via &lt;a class="reference external" href="http://twitter.com/rintcius"&gt;twitter&lt;/a&gt; or &lt;span class="raw-role"&gt;&lt;span&gt;&lt;script language="JavaScript"&gt; var name = "rintcius"; var domain = "gmai" + "l.c" + "om"; document.write('&lt;a href="mai' + 'lto:' + name + '@' + domain + '"&gt;'); document.write('email' + '&lt;/a&gt;');  &lt;/script&gt; &lt;/span&gt;&lt;/span&gt;.&lt;/p&gt;
+&lt;/div&gt;
+</summary><category term="scala"></category><category term="software design"></category><category term="dependency injection"></category></entry><entry><title>New blog</title><link href="http://blog.rintcius.nl/post/new-blog.html" rel="alternate"></link><updated>2013-01-13T00:00:00+01:00</updated><author><name>Rintcius Blok</name></author><id>tag:blog.rintcius.nl,2013-01-13:post/new-blog.html</id><summary type="html">&lt;p&gt;This is the place of my new blog, moving away from Wordpress, and moving to &lt;a class="reference external" href="http://docs.getpelican.com/"&gt;Pelican&lt;/a&gt;.
 Pelican is a static site generator written in Python which enables serving a site directly from Github.&lt;/p&gt;
 &lt;p&gt;Pelican makes writing a post as easy as pushing a file to Github.
-So writing has become more like programming, which increases the chances of me blogging more often ;)&lt;/p&gt;</summary><category term="misc"></category></entry></feed>
+So writing has become more like programming, which increases the chances of me blogging more often ;)&lt;/p&gt;
+</summary><category term="misc"></category></entry></feed>

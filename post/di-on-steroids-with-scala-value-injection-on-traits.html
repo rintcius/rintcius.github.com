@@ -9,6 +9,7 @@
 
     <!-- Le styles -->
     <link rel="stylesheet" href="http://blog.rintcius.nl/theme/css/io-svc-simple.css" type="text/css" />
+    <link rel="stylesheet" href="http://blog.rintcius.nl/theme/css/aispec.css" type="text/css" />
     <style type="text/css">
       .tag-1 {
         font-size: 13pt;
@@ -62,7 +63,7 @@
     <link rel="apple-touch-icon" sizes="114x114" href="http://blog.rintcius.nl/theme/images/apple-touch-icon-114x114.png">
 
     <link href="http://blog.rintcius.nl/" type="application/atom+xml" rel="alternate" title="Blok blogs ATOM Feed" />
-    
+
   </head>
 
   <body>
@@ -75,16 +76,16 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="http://blog.rintcius.nl/index.html">Blok blogs </a>
+          <a class="brand airbus-italic-bold contrast" style="font-variant: small-caps;text-transform: uppercase" href="http://blog.rintcius.nl/index.html"><span style="top: 3px; position: relative;">Blok blogs</span> </a>
           <div class="nav-collapse">
             <ul class="nav">
-                                                                    <li class="divider-vertical"></li>
-                                              <li class="active">
+                          <li class="divider-vertical"></li>
+                  <li class="active">
                     <a href="http://blog.rintcius.nl/category/post.html">
 						<i class="icon-folder-open icon-large"></i>post
 					</a>
                   </li>
-              
+
                           <ul class="nav pull-right">
                                 <li><a href="http://blog.rintcius.nl/archives.html"><i class="icon-th-list"></i>Archives</a></li>
                           </ul>
@@ -96,10 +97,18 @@
       </div>
     </div>
 
+    <div class="hero-unit">
+        <div class="container-fluid">
+            <div class="row">
+                <h1><a class="brand airbus-italic-bold contrast" style="font-variant: small-caps;text-transform: uppercase;text-decoration: none;font-size: 90px" href="http://blog.rintcius.nl/index.html">Blok blogs </a></h1>
+            </div>
+        </div>
+    </div>
+
     <div class="container-fluid">
       <div class="row">
         <div class="span9" id="content">
-            <section>
+<section>
         <article>
                 <header>
                     <div class="page-header">
@@ -109,7 +118,7 @@
                                         title="Permalink to Dependency Injection on steroids with Scala : Value injection on traits">
                                         Dependency Injection on steroids with Scala : Value injection on traits
                                 </a>
-                                <a href="http://twitter.com/share" class="twitter-share-button"
+<a href="http://twitter.com/share" class="twitter-share-button"
    data-count="horizontal" data-via="rintcius">Tweet</a>
 <script type="text/javascript" src="http://platform.twitter.com/widgets.js">
 </script>
@@ -150,7 +159,7 @@ And I will end with the conclusions.</p>
 I have added <em>on traits</em> to <em>value injection</em> to make the contrast with classes explicit.
 You <em>can</em> do value injection on classes, but that looks a lot like the constructor injection pattern that we already know.</p>
 <p>This is how the &quot;Value injection on traits&quot; pattern looks like, using the movie example of Fowler
-(or if you prefer the <a class="reference external" href="http://blog.rintcius.nl/post/di-in-scala-warmer-example-using-value-injection.html">Warmer example that Jonas Boner introduced</a>):</p>
+(or if you prefer the <a class="reference external" href="|filename|/post/2013/01/warmer-example-using-value-injection.md">Warmer example that Jonas Boner introduced</a>):</p>
 <div class="highlight"><pre>trait MovieFinder {
   def findAll:Seq[Movie]
 }
@@ -169,6 +178,12 @@ class ColonMovieFinder(filename: String) extends MovieFinder {
 </pre></div>
 <p>Although contrived in this simple example, the key is that <code>MovieLister</code> can be a <strong>trait</strong> (apart from a <code>class</code>) while
 nicely <strong>separating concerns</strong> by using a <code>val</code> to access the functionality of <code>MovieFinder</code>.</p>
+<p><strong>Note</strong> (thanks Naftoli for your comment):
+when used in e.g. the cake pattern, abstract values are usually a source of <code>NullPointerException</code>'s and you will
+have to workaround it by using <code>lazy val</code>'s (and even then it can get tricky).
+This happens since you don't have any control over when a <code>val</code> is instantiated.
+When you use this pattern though, since the concerns are separated, you <em>can</em> control it and you don't have
+to worry about <code>NullPointerException</code>'s and resort to <code>lazy val</code>'s.</p>
 <p>The next section will show more interesting characteristics of the wirable code.</p>
 <p>The wiring code can then be as simple as this (so simple that you can hardly call it wiring):</p>
 <div class="highlight"><pre>val myLister = new MovieLister {
@@ -289,11 +304,54 @@ And finally I like how the <strong>structure of the wiring</strong> is immediate
 <p>I hope it will be of value to you too.
 Suggestions, ideas and thoughts are welcome!</p>
 </div>
+<div class="well section" id="about-me">
+<h2>About me</h2>
+<p>This is one of the interesting things that I learned on my software development ride,
+which started last year after quitting my job in Amsterdam and migrating from the Netherlands to Edinburgh, Scotland.</p>
+<p>I took this move as an opportunity to focus full-time on developing myself in the direction of my fascinations &amp; passions (believe driven development ;)).
+Programming languages is one of my passions and learning more Scala was (and is) one of my goals.</p>
+<p>I took <a class="reference external" href="https://webservices.io">webservices.io</a> as the vehicle of the ride and - apart from learning more Scala -
+here is what I made, in order of coolness (by my definition of coolness, that is):</p>
+<ol class="arabic simple">
+<li><strong>Backend</strong> of webservices.io (using Scala with Play2): pluggable service architecture, e.g. the services can be nicely composed.
+Still lots of ideas here (keep you posted).</li>
+<li>In the <strong>DevOps</strong> area (using Python):
+flexible infrastructure architecture that enables to quickly switch cloud providers or move to a non-cloud setup.
+Also gained more experience with multiple cloud services (mainly AWS on IAAS level, but also several PAAS solutions);</li>
+<li><strong>Website</strong> (using Play2 and twitter bootstrap): this, among others, resulted in the first webdesign of which I am not unproud.</li>
+</ol>
+<p>I will soon be reaching the point where I cannot work full-time/speed on <a class="reference external" href="https://webservices.io">webservices.io</a> anymore,
+although I will certainly work further on it - with a lower speed - in my spare time.
+Also I am open for &amp; interested in ideas to keep this project going at various levels of speed.</p>
+<p>Anyway, this has been a great experience.</p>
+<p>In the future I would really like to continue working in this area - with <em>this area</em> being loosely defined as:</p>
+<ul class="simple">
+<li><strong>Software development and architecture</strong> - I have mostly been working in the role of software developer and architect,
+but I also enjoy working on other parts of the software lifecycle
+ranging from brainstorming new ideas and analyzing requirements to testing.</li>
+<li><strong>JVM platform</strong> - My favorite platform. I have experience with the following languages:<ul>
+<li><strong>Scala</strong> - I think Scala has a great future ahead with powers that go way beyond Java</li>
+<li><strong>Java</strong> - I have been working with Java for more than 10 years; still interested in Java projects</li>
+<li><strong>Groovy</strong> - I have worked on some Groovy/Grails projects in the past and found it also a pleasure to work with</li>
+</ul>
+</li>
+<li><strong>Cloud computing</strong><ul>
+<li>Development and architecture for cloud-based applications</li>
+<li>Migrating applications and services to the cloud</li>
+<li>DevOps work</li>
+</ul>
+</li>
+<li><strong>Environment</strong> - I feel at home in agile environment with e.g. start ups,
+but also with enterprises as long as there is a culture of looking forward and to <em>improve</em> software.</li>
+</ul>
+<p>If I can be of help to you in one of these areas,
+please get in touch via <a class="reference external" href="http://twitter.com/rintcius">twitter</a> or <span class="raw-role"><span><script language="JavaScript"> var name = "rintcius"; var domain = "gmai" + "l.c" + "om"; document.write('<a href="mai' + 'lto:' + name + '@' + domain + '">'); document.write('email' + '</a>');  </script> </span></span>.</p>
+</div>
 
                     <div class="well">
-                            <footer class="post-info">
+<footer class="post-info">
 <span class="label">Date</span>
-<abbr class="published" title="2013-01-15T00:00:00">
+<abbr class="published" title="2013-01-15T00:00:00+01:00">
         <i class="icon-calendar"></i>Tue 15 January 2013
 </abbr>
 <span class="label">By</span>
@@ -308,7 +366,7 @@ Suggestions, ideas and thoughts are welcome!</p>
     <i class="icon-tag"></i><a href="http://blog.rintcius.nl/tag/dependency-injection.html">dependency injection</a>
 </footer><!-- /.post-info -->                    </div>
                 </div><!-- /.entry-content -->
-                                <div class="comments">
+                <div class="comments">
                 <h2>Comments</h2>
                         <div id="disqus_thread"></div>
                         <script type="text/javascript">
@@ -322,75 +380,67 @@ Suggestions, ideas and thoughts are welcome!</p>
                           })();
                         </script>
                 </div>
-                        </article>
+        </article>
 </section>
         </div><!--/span-->
 
 
-            <div style="margin-top: 100px" class="span3 sidebar-nav" id="sidebar">
+<div style="margin-top: 100px" class="span3 sidebar-nav" id="sidebar">
 
     <ul class="nav nav-list">
-                <div class="well">
+        <div class="well">
             <li class="nav-header"><h4><i class="icon-external-link"></i>links</h4></li>
             <ul>
-                                <li><i class="icon-external-link"></i><a href="http://webservices.io">webservices.io</a></li>
-                            </ul>
+                <li><i class="icon-external-link"></i><a href="http://webservices.io">webservices.io</a></li>
+            </ul>
         </div>
-        
-                <div class="well">
+
+        <div class="well">
             <li class="nav-header"><h4><i class="icon-home icon-large"></i>social</h4></li>
             <ul>
                 <li>
                     <i style="color: #a0d6ff;" class="icon-bookmark icon-large"></i><a href="http://blog.rintcius.nl/" rel="alternate">atom feed</a>
                 </li>
-                                                <li>
+                <li>
                     <i class="icon-twitter-sign icon-large"></i><a href="http://twitter.com/rintcius">twitter</a>
                 </li>
-                                <li>
+                <li>
                     <i class="icon-github-sign icon-large"></i><a href="http://github.com/rintcius">github</a>
                 </li>
-                            </ul>
+            </ul>
         </div>
-        
+
         <div class="well">
             <li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
             <ul>
-                                <li>
+                <li>
                     <i class="icon-folder-open icon-large"></i><a href="http://blog.rintcius.nl/category/post.html">post</a>
                 </li>
-                            </ul>
+            </ul>
         </div>
 
-                        
+        <div class="well">
+            <li class="nav-header"><h4><i class="icon-file icon-large"></i>Related Posts</h4></li>
+            <ul>
+                <li>
+                    <i class="icon-file icon-large"></i>
+                    <a href="http://blog.rintcius.nl/post/di-in-scala-warmer-example-using-value-injection.html">DI in Scala: Warmer example using Value injection</a>
+                </li>
+                <li>
+                    <i class="icon-file icon-large"></i>
+                    <a href="http://blog.rintcius.nl/post/scala-traits-as-well-defined-modules-and-a-crime-scene-investigation.html">Scala traits as well-defined modules - And a crime scene investigation</a>
+                </li>
+            </ul>
+        </div>
+
         <div class="well">
             <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
             <ul>
-                                <li class="tag-4">
-                    <a href="http://blog.rintcius.nl/tag/misc.html">misc</a>
-                </li>
-                                <li class="tag-1">
-                    <a href="http://blog.rintcius.nl/tag/scala.html">scala</a>
-                </li>
-                                <li class="tag-2">
-                    <a href="http://blog.rintcius.nl/tag/dependency-injection.html">dependency injection</a>
-                </li>
-                                <li class="tag-2">
-                    <a href="http://blog.rintcius.nl/tag/software-design.html">software design</a>
-                </li>
-                                <li class="tag-4">
-                    <a href="http://blog.rintcius.nl/tag/trait.html">trait</a>
-                </li>
-                                <li class="tag-4">
-                    <a href="http://blog.rintcius.nl/tag/module.html">module</a>
-                </li>
-                                <li class="tag-4">
-                    <a href="http://blog.rintcius.nl/tag/abstract-value.html">abstract value</a>
-                </li>
-                            </ul>
+            </ul>
         </div>
 
         <div class="well">
-        <li class="nav-header"><h4><i class="icon-twitter-sign"></i>Twitter</h4></li>
+<li class="nav-header"><h4><i class="icon-twitter-sign"></i>Twitter</h4></li>
 <script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
 <script>
 new TWTR.Widget({
@@ -420,8 +470,8 @@ new TWTR.Widget({
 }).render().setUser('rintcius').start();
 </script>
         </div>
-        
-            </ul>
+
+    </ul>
 
 </div><!--/.well -->
 
@@ -435,7 +485,7 @@ new TWTR.Widget({
     </div><!--/.fluid-container-->
 
 
-    <script type="text/javascript">
+<script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
 </script>
@@ -444,7 +494,7 @@ try {
 	var pageTracker = _gat._getTracker("UA-395810-1");
 pageTracker._trackPageview();
 } catch(err) {}</script>
-        <script type="text/javascript">
+<script type="text/javascript">
     var disqus_shortname = 'rintcius';
     (function () {
         var s = document.createElement('script'); s.async = true;
